@@ -1,0 +1,424 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Contrast Stone | Marble, Granite & Quartz Kitchen Countertops</title>
+<meta name="description" content="Contrast Stone - precise fabrication and installation of marble, granite, and quartz. Specialists in granite and quartz kitchen countertops in the Egyptian market since 2016.">
+<meta property="og:title" content="Contrast Stone">
+<meta property="og:description" content="Fabrication that looks like you. Not like anyone else.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Changa:wght@600;700;800&family=IBM+Plex+Sans+Arabic:wght@300;400;500;600&display=swap" rel="stylesheet">
+<link rel="icon" type="image/png" href="favicon-32.png">
+<link rel="apple-touch-icon" href="favicon-180.png">
+<style>
+  :root{
+    --stone:#181410; --charcoal:#211c17; --charcoal-2:#2a231c; --clay:#b08d57; --clay-bright:#d4b378; --clay-deep:#8a6c3f;
+    --cream:#efe6d8; --taupe:#a99a86; --line:rgba(239,230,216,.14); --line-dark:rgba(24,20,16,.12);
+    --disp:'Changa',sans-serif; --body:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif; --wrap:1400px;
+  }
+  *{box-sizing:border-box; margin:0; padding:0;}
+  html{scroll-behavior:smooth;}
+  body{font-family:var(--body); background:var(--cream); color:var(--stone); line-height:1.7; -webkit-font-smoothing:antialiased;}
+  a{color:inherit; text-decoration:none;}
+  img{display:block; max-width:100%;}
+  .wrap{max-width:var(--wrap); margin:0 auto; padding:0 40px;}
+  @media (max-width:700px){.wrap{padding:0 22px;}}
+  :focus-visible{outline:3px solid var(--clay); outline-offset:3px;}
+  .reveal{opacity:0; transform:translateY(22px); transition:opacity .8s ease, transform .8s ease;}
+  .reveal.is-visible{opacity:1; transform:none;}
+  @media (prefers-reduced-motion: reduce){.reveal{opacity:1; transform:none; transition:none;} html{scroll-behavior:auto;}}
+
+  .tex-band{height:8px; width:100%; background:linear-gradient(90deg, var(--clay-deep), var(--clay-bright), var(--clay-deep));}
+
+  .topbar{position:fixed; inset:0 0 auto 0; z-index:50; display:flex; justify-content:space-between; align-items:center; padding:18px 40px; background:rgba(24,20,16,.88); backdrop-filter:blur(6px); border-bottom:1px solid var(--line);}
+  @media (max-width:700px){.topbar{padding:16px 22px;}}
+  .brand{font-family:var(--disp); font-weight:800; font-size:1rem; letter-spacing:.04em; color:var(--cream);}
+  .nav-links{display:none; align-items:center; gap:30px; list-style:none;}
+  @media (min-width:960px){.nav-links{display:flex;}}
+  .nav-links a{font-size:.84rem; font-weight:500; color:var(--cream); opacity:.85; padding-bottom:3px; border-bottom:1px solid transparent;}
+  .nav-links a:hover{opacity:1; border-color:var(--clay-bright);}
+  .topbar-right{display:flex; align-items:center; gap:22px;}
+  .nav-toggle{display:flex; align-items:center; justify-content:center; width:38px; height:38px; background:none; border:1px solid rgba(239,230,216,.3); cursor:pointer; color:var(--cream);}
+  @media (min-width:960px){.nav-toggle{display:none;}}
+  .nav-toggle svg{width:18px; height:18px;}
+  .mobile-menu{position:fixed; inset:0; z-index:60; background:var(--stone); display:none; flex-direction:column; padding:90px 32px 32px;}
+  .mobile-menu.open{display:flex;}
+  .mobile-menu a{color:var(--cream); font-family:var(--disp); font-weight:700; font-size:1.6rem; padding:16px 0; border-bottom:1px solid var(--line);}
+  .mobile-menu-close{position:absolute; top:20px; right:22px; width:38px; height:38px; background:none; border:1px solid rgba(239,230,216,.3); color:var(--cream); cursor:pointer;}
+  .nav-cta{display:inline-flex; align-items:center; gap:9px; font-size:.8rem; font-weight:600; color:var(--cream); border-bottom:1px solid var(--clay-bright); padding-bottom:3px; animation:pulse-line 2.4s ease-out infinite;}
+  .lang-link{font-size:.8rem; color:var(--taupe); border-bottom:1px solid rgba(169,154,134,.4); padding-bottom:3px;}
+  .lang-link:hover{color:var(--cream);}
+  @keyframes pulse-line{0%,100%{opacity:1;} 50%{opacity:.55;}}
+  .wa-float{position:fixed; bottom:24px; left:24px; z-index:70; width:54px; height:54px; border-radius:50%; background:var(--clay); color:var(--cream); display:flex; align-items:center; justify-content:center; box-shadow:0 12px 28px rgba(0,0,0,.4); animation:pulse 2.2s ease-out infinite;}
+  .wa-float svg{width:24px; height:24px;}
+  @keyframes pulse{0%{box-shadow:0 0 0 0 rgba(181,98,58,.55);} 70%{box-shadow:0 0 0 16px rgba(181,98,58,0);} 100%{box-shadow:0 0 0 0 rgba(181,98,58,0);}}
+  @media (prefers-reduced-motion: reduce){.wa-float,.nav-cta{animation:none;}}
+
+  .hero{position:relative; min-height:100vh; display:flex; align-items:flex-end; background:var(--stone);}
+  .hero-photo{position:absolute; inset:0;}
+  .hero-photo img, .hero-photo video{width:100%; height:100%; object-fit:cover; object-position:center 45%;}
+  .hero-photo::after{content:""; position:absolute; inset:0; background:linear-gradient(0deg, rgba(24,20,16,.55) 5%, rgba(24,20,16,.05) 40%, rgba(24,20,16,.35) 100%);}
+  .hero-body{position:relative; z-index:1; padding:0 40px 60px; max-width:var(--wrap); margin:0 auto; width:100%; text-shadow:0 2px 18px rgba(0,0,0,.55);}
+  @media (max-width:700px){.hero-body{padding:0 22px 48px;}}
+  .eyebrow{display:block; font-size:.76rem; font-weight:600; letter-spacing:.16em; color:var(--clay-bright); margin-bottom:16px;}
+  .hero h1{font-family:var(--disp); font-weight:800; color:var(--cream); font-size:clamp(2.6rem,9vw,7rem); line-height:.98; letter-spacing:-.01em;}
+  .hero h1 .l2{display:block; margin-left:7vw; color:var(--clay-bright);}
+  .hero-meta{display:flex; justify-content:space-between; align-items:flex-end; gap:24px; margin-top:32px; flex-wrap:wrap;}
+  .hero-sub{max-width:360px; font-size:.98rem; color:var(--taupe); line-height:1.85;}
+  .hero-cta{display:inline-flex; align-items:center; gap:12px; font-weight:700; font-size:.92rem; color:var(--cream); border-bottom:2px solid var(--clay-bright); padding-bottom:6px;}
+  .hero-cta svg{width:18px; height:18px;}
+
+  .section{padding:100px 0;}
+  .section--dark{background:var(--charcoal); color:var(--cream);}
+  .section-label{font-size:.76rem; font-weight:600; letter-spacing:.16em; color:var(--clay);}
+  .section--dark .section-label{color:var(--clay-bright);}
+  .section h2{font-family:var(--disp); font-weight:800; font-size:clamp(2rem,4.4vw,3.4rem); margin-top:16px; line-height:1.08;}
+
+  .why-list{margin-top:60px;}
+  .why-row{display:grid; grid-template-columns:100px 1fr; gap:28px; padding:34px 0; border-top:1px solid var(--line-dark); align-items:start;}
+  .why-row:last-child{border-bottom:1px solid var(--line-dark);}
+  @media (max-width:700px){.why-row{grid-template-columns:56px 1fr; gap:16px;}}
+  .why-num{font-family:var(--disp); font-weight:800; font-size:clamp(2.2rem,4vw,3.2rem); color:var(--clay); line-height:1;}
+  .why-row h3{font-size:1.25rem; margin-bottom:10px;}
+  .why-row p{color:#5a4f40; max-width:560px;}
+
+  .filter-row{display:flex; gap:26px; flex-wrap:wrap; margin:44px 0 40px; font-size:.86rem; font-weight:600;}
+  .filter-btn{background:none; border:none; padding:0 0 6px; cursor:pointer; color:var(--taupe); border-bottom:2px solid transparent;}
+  .filter-btn.active{color:var(--cream); border-color:var(--clay-bright);}
+  .g-masonry{column-count:1; column-gap:16px;}
+  @media (min-width:640px){.g-masonry{column-count:2;}}
+  @media (min-width:1000px){.g-masonry{column-count:3;}}
+  .g-tile{position:relative; margin-bottom:16px; break-inside:avoid; overflow:hidden; border-radius:2px;}
+  .g-tile.hide{display:none;}
+  .g-tile img{width:100%; height:auto; display:block; transition:transform .5s ease;}
+  .g-tile:hover img{transform:scale(1.04);}
+  .g-tile .g-label{position:absolute; inset:auto 0 0 0; padding:18px 16px; background:linear-gradient(0deg, rgba(24,20,16,.85), transparent); color:var(--cream); font-size:.8rem; font-weight:600; letter-spacing:.03em;}
+  .more-note{margin-top:36px; color:var(--taupe); font-size:.94rem;}
+  .more-note a{color:var(--clay-bright); font-weight:700; border-bottom:1px solid currentColor;}
+
+  .lens-wrap{max-width:820px; margin:56px auto 0;}
+  .lens-stage{position:relative; aspect-ratio:16/10; overflow:hidden; border-radius:2px;}
+  .lens-stage img{position:absolute; inset:0; width:100%; height:100%; object-fit:cover;}
+  .lens-gray{filter:grayscale(1) contrast(1.05) sepia(.12);}
+  .lens-ring{position:absolute; inset:0; background:var(--clay-bright); animation:wander-ring 13s ease-in-out infinite;}
+  .lens-color{position:absolute; inset:0; animation:wander-color 13s ease-in-out infinite;}
+  @keyframes wander-ring{0%{clip-path:circle(92px at 32% 63%);} 28%{clip-path:circle(92px at 78% 57%);} 56%{clip-path:circle(92px at 68% 71%);} 80%{clip-path:circle(92px at 42% 74%);} 100%{clip-path:circle(92px at 32% 63%);}}
+  @keyframes wander-color{0%{clip-path:circle(84px at 32% 63%);} 28%{clip-path:circle(84px at 78% 57%);} 56%{clip-path:circle(84px at 68% 71%);} 80%{clip-path:circle(84px at 42% 74%);} 100%{clip-path:circle(84px at 32% 63%);}}
+  @media (prefers-reduced-motion: reduce){.lens-ring,.lens-color{animation:none; clip-path:circle(92px at 50% 50%);}}
+  .video-note{text-align:center; color:var(--taupe); font-size:.86rem; margin-top:20px;}
+
+  .testi-masonry{column-count:1; column-gap:18px; margin-top:52px;}
+  @media (min-width:640px){.testi-masonry{column-count:2;}}
+  @media (min-width:1000px){.testi-masonry{column-count:3;}}
+  .testi-card{margin-bottom:18px; break-inside:avoid; border-radius:4px; overflow:hidden; box-shadow:0 14px 34px rgba(0,0,0,.35);}
+  .testi-card img{width:100%; display:block;}
+
+  .collections{margin-top:56px; display:flex; flex-direction:column; gap:2px;}
+  .collection-row{position:relative; display:grid; grid-template-columns:1fr; overflow:hidden;}
+  @media (min-width:820px){.collection-row{grid-template-columns:1.1fr 1fr;}}
+  .c-photo{position:relative; aspect-ratio:16/10; overflow:hidden;}
+  @media (min-width:820px){.c-photo{aspect-ratio:auto; min-height:340px;}}
+  .c-photo img{width:100%; height:100%; object-fit:cover;}
+  .c-info{background:var(--charcoal-2); color:var(--cream); padding:44px; display:flex; flex-direction:column; justify-content:center;}
+  @media (max-width:700px){.c-info{padding:30px 24px;}}
+  .c-info .c-eyebrow{font-size:.75rem; font-weight:600; letter-spacing:.14em; color:var(--clay-bright); margin-bottom:12px;}
+  .c-info h3{font-family:var(--disp); font-weight:800; font-size:clamp(1.6rem,3vw,2.4rem); margin-bottom:14px;}
+  .c-info p{color:var(--taupe); font-size:.94rem; max-width:420px;}
+  @media (min-width:820px){.collection-row:nth-child(even) .c-photo{order:2;}}
+
+  .faq-list{max-width:720px; margin-top:48px; display:flex; flex-direction:column;}
+  .faq-item{border-bottom:1px solid var(--line-dark); padding:20px 0;}
+  .faq-item summary{cursor:pointer; font-weight:600; font-size:1.05rem; list-style:none; display:flex; justify-content:space-between; align-items:center; gap:12px;}
+  .faq-item summary::-webkit-details-marker{display:none;}
+  .faq-item summary::after{content:"+"; font-size:1.3rem; color:var(--clay); transition:transform .2s ease; flex-shrink:0;}
+  .faq-item[open] summary::after{transform:rotate(45deg);}
+  .faq-item p{margin-top:12px; color:#5a4f40; font-size:.95rem; max-width:600px;}
+
+  .contact{text-align:center;}
+  .contact h2{margin-bottom:18px;}
+  .contact .sub{color:var(--taupe); max-width:480px; margin:0 auto 40px;}
+  .quote-form{width:100%; max-width:540px; margin:0 auto 8px; text-align:left; display:flex; flex-direction:column; gap:24px;}
+  .qf-group{display:flex; flex-direction:column; gap:10px;}
+  .qf-label{font-size:.84rem; color:var(--taupe); font-weight:600;}
+  .qf-chips{display:flex; flex-wrap:wrap; gap:10px;}
+  .chip{cursor:pointer;}
+  .chip input{position:absolute; opacity:0; width:1px; height:1px;}
+  .chip span{display:inline-block; padding:10px 18px; border:1px solid rgba(239,230,216,.25); color:var(--cream); font-size:.86rem; transition:all .2s ease;}
+  .chip input:checked + span{background:var(--clay); border-color:var(--clay); color:var(--stone); font-weight:600;}
+  .chip input:focus-visible + span{outline:3px solid var(--clay-bright); outline-offset:2px;}
+  .qf-input{background:rgba(239,230,216,.06); border:1px solid rgba(239,230,216,.22); padding:13px 16px; color:var(--cream); font-size:.95rem; font-family:var(--body); width:100%;}
+  .qf-input::placeholder{color:#8a7f6e;}
+  .btn-primary{display:inline-flex; align-items:center; gap:10px; background:var(--clay); color:var(--stone); font-weight:700; font-size:1rem; padding:16px 34px; border:none; cursor:pointer;}
+  .btn-primary svg{width:20px; height:20px;}
+  .contact .number{margin-top:8px; color:var(--taupe); font-size:.9rem; display:inline-block;}
+  .contact .address{margin-top:30px; padding-top:24px; border-top:1px solid var(--line); width:100%; max-width:540px;}
+  .contact .address p{color:var(--taupe); font-size:.94rem; margin-bottom:8px;}
+  .contact .address .visit-line{color:var(--clay-bright); font-weight:600;}
+  .contact .address a{color:var(--clay-bright); font-weight:700; border-bottom:1px solid currentColor;}
+
+  .footer{background:var(--stone); color:#7d7263; text-align:center; padding:34px 24px; font-size:.85rem;}
+  .footer-logo{height:70px; width:78px; margin:0 auto 14px; opacity:.8; filter:brightness(0) invert(1);}
+  .logo-mark{background-image:url("logo-footer.png"); background-repeat:no-repeat; background-position:center; background-size:contain;}
+  .footer a{color:var(--clay-bright); border-bottom:1px solid currentColor;}
+</style>
+</head>
+<body>
+
+<div class="tex-band"></div>
+
+<header class="topbar">
+  <span class="brand">Contrast Stone</span>
+  <ul class="nav-links">
+    <li><a href="#why">Why Us</a></li>
+    <li><a href="#gallery">Our Work</a></li>
+    <li><a href="#collections">Collections</a></li>
+    <li><a href="#testimonials">Reviews</a></li>
+    <li><a href="#faq">FAQ</a></li>
+  </ul>
+  <div class="topbar-right">
+    <a class="lang-link" href="index.html">العربية</a>
+    <a class="nav-cta" href="https://wa.me/201123883389" target="_blank" rel="noopener">
+      Book a Visit
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+    </a>
+    <button class="nav-toggle" id="navToggle" aria-label="Open menu">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 7h16M4 12h16M4 17h16"/></svg>
+    </button>
+  </div>
+</header>
+
+<nav class="mobile-menu" id="mobileMenu">
+  <button class="mobile-menu-close" id="mobileMenuClose" aria-label="Close menu">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 6l12 12M18 6L6 18"/></svg>
+  </button>
+  <a href="#why">Why Us</a>
+  <a href="#gallery">Our Work</a>
+  <a href="#collections">Collections</a>
+  <a href="#testimonials">Reviews</a>
+  <a href="#faq">FAQ</a>
+  <a href="#contact">Contact</a>
+</nav>
+
+<a class="wa-float" href="https://wa.me/201123883389" target="_blank" rel="noopener" aria-label="Contact us on WhatsApp">
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 20l1.6-4.8A8 8 0 1 1 9 18.6L4 20Z"/><path d="M9 10.5c.4 2 2 3.6 4 4" stroke-linecap="round"/></svg>
+</a>
+
+<main>
+
+  <section class="hero">
+    <div class="hero-photo">
+      <video autoplay muted loop playsinline poster="calacata-sueste-1.jpg">
+        <source src="hero-video.mp4" type="video/mp4">
+      </video>
+    </div>
+    <div class="hero-body">
+      <span class="eyebrow">Fabrication & installation — since 2016</span>
+      <h1>Fabrication like you<span class="l2">Not like anyone else</span></h1>
+      <div class="hero-meta">
+        <p class="hero-sub">Every vein, every reflection, every cut edge — details we work on the way a craftsman works on a piece of art.</p>
+        <a class="hero-cta" href="https://wa.me/201123883389" target="_blank" rel="noopener">Book your visit
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <section id="why" class="section">
+    <div class="wrap reveal">
+      <span class="section-label">Why Choose Us</span>
+      <h2>4 reasons<br>we build with every job</h2>
+      <div class="why-list">
+        <div class="why-row"><span class="why-num">01</span><div><h3>Experience since 2016</h3><p>Years of real execution in the Egyptian market, not a new company still figuring it out.</p></div></div>
+        <div class="why-row"><span class="why-num">02</span><div><h3>Focused, not scattered</h3><p>Granite and quartz only — every bit of effort goes into mastering one craft.</p></div></div>
+        <div class="why-row"><span class="why-num">03</span><div><h3>Precision cutting with waterjet</h3><p>Sink cutouts and every piece cut to your kitchen's exact measurements.</p></div></div>
+        <div class="why-row"><span class="why-num">04</span><div><h3>Coverage across Egypt</h3><p>Not limited to Cairo — we reach anywhere in the country.</p></div></div>
+      </div>
+    </div>
+  </section>
+
+  <section id="gallery" class="section section--dark">
+    <div class="wrap reveal">
+      <span class="section-label">Our Work</span>
+      <h2>From our projects</h2>
+      <div class="filter-row" id="filterRow">
+        <button class="filter-btn active" data-filter="all">All</button>
+        <button class="filter-btn" data-filter="miranda">Calacatta Miranda</button>
+        <button class="filter-btn" data-filter="sueste">Calacatta Sueste</button>
+        <button class="filter-btn" data-filter="storia">Storia</button>
+        <button class="filter-btn" data-filter="starlet">Starlet</button>
+      </div>
+      <div class="g-masonry" id="galleryGrid">
+        <div class="g-tile" data-material="miranda"><img src="calacata-miranda-1.jpg" alt="Calacatta Miranda Quartz kitchen" loading="lazy"><span class="g-label">Calacatta Miranda</span></div>
+        <div class="g-tile" data-material="starlet"><img src="starlet-kitchen-1.jpg" alt="Starlet Quartz kitchen" loading="lazy"><span class="g-label">Starlet</span></div>
+        <div class="g-tile" data-material="sueste"><img src="calacata-sueste-1.jpg" alt="Calacatta Sueste Quartz kitchen" loading="lazy"><span class="g-label">Calacatta Sueste</span></div>
+        <div class="g-tile" data-material="miranda"><img src="calacata-miranda-2.jpg" alt="Calacatta Miranda Quartz detail" loading="lazy"><span class="g-label">Calacatta Miranda</span></div>
+        <div class="g-tile" data-material="storia"><img src="storia-1.jpg" alt="Storia Quartz bar" loading="lazy"><span class="g-label">Storia</span></div>
+        <div class="g-tile" data-material="starlet"><img src="starlet-utility-1.jpg" alt="Starlet Quartz utility room" loading="lazy"><span class="g-label">Starlet</span></div>
+      </div>
+      <p class="more-note">See more of our work on <a href="https://www.facebook.com/contraststone" target="_blank" rel="noopener">Facebook</a>.</p>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="wrap reveal">
+      <span class="section-label">See the true color</span>
+      <h2>A lens on the surface</h2>
+      <div class="lens-wrap">
+        <div class="lens-stage">
+          <img class="lens-gray" src="calacata-miranda-1.jpg" alt="">
+          <div class="lens-ring"></div>
+          <div class="lens-color"><img src="calacata-miranda-1.jpg" alt=""></div>
+        </div>
+      </div>
+      <p class="video-note">Real footage from our projects is coming soon, right in this spot.</p>
+    </div>
+  </section>
+
+  <section id="testimonials" class="section section--dark">
+    <div class="wrap reveal">
+      <span class="section-label">What clients say</span>
+      <h2>Clients who worked with us</h2>
+      <div class="testi-masonry">
+        <div class="testi-card"><img src="testimonial-1.png" alt="Client review: Nour Ahmed" loading="lazy"></div>
+        <div class="testi-card"><img src="testimonial-2.png" alt="Client review: Ramy Abd Elmaboud" loading="lazy"></div>
+        <div class="testi-card"><img src="testimonial-3.png" alt="Client review: Marina Rashad" loading="lazy"></div>
+        <div class="testi-card"><img src="testimonial-4.png" alt="Client review: Mido Salem" loading="lazy"></div>
+        <div class="testi-card"><img src="testimonial-5.png" alt="Client review: Nehad El Sayed" loading="lazy"></div>
+        <div class="testi-card"><img src="testimonial-6.png" alt="Client review: Hossam Abo Younis" loading="lazy"></div>
+      </div>
+    </div>
+  </section>
+
+  <section id="collections" class="section">
+    <div class="wrap reveal">
+      <span class="section-label">Collections</span>
+      <h2>Our materials</h2>
+    </div>
+    <div class="collections">
+      <div class="collection-row">
+        <div class="c-photo"><img src="calacata-miranda-1.jpg" alt="Calacatta Miranda Quartz"></div>
+        <div class="c-info"><span class="c-eyebrow">Quartz Collection</span><h3>Calacatta Miranda</h3><p>Light marble-like veining on a cream base — quiet luxury suited to open spaces.</p></div>
+      </div>
+      <div class="collection-row">
+        <div class="c-photo"><img src="starlet-kitchen-1.jpg" alt="Starlet Quartz"></div>
+        <div class="c-info"><span class="c-eyebrow">Quartz Collection</span><h3>Starlet</h3><p>A deep, unified tone that makes any wood or metal detail around it stand out.</p></div>
+      </div>
+      <div class="collection-row">
+        <div class="c-photo"><img src="storia-1.jpg" alt="Storia Quartz"></div>
+        <div class="c-info"><span class="c-eyebrow">Quartz Collection</span><h3>Storia</h3><p>A clean white surface with a classic feel that lives with any decor for years.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <section id="faq" class="section">
+    <div class="wrap reveal">
+      <span class="section-label">FAQ</span>
+      <h2>Frequently asked questions</h2>
+      <div class="faq-list">
+        <details class="faq-item"><summary>Is the site visit free?</summary><p>The site visit costs 1,000 EGP, deducted from the contract value if we go ahead with the work.</p></details>
+        <details class="faq-item"><summary>How long does installation take?</summary><p>About 15 to 20 days from the contract date.</p></details>
+        <details class="faq-item"><summary>Do you offer imported materials?</summary><p>Yes, we supply most types of imported quartz.</p></details>
+        <details class="faq-item"><summary>Do you cover all of Egypt?</summary><p>Yes, we cover the whole of Egypt. Outside Cairo, transport and installation fees are added depending on location.</p></details>
+      </div>
+    </div>
+  </section>
+
+  <section id="contact" class="section section--dark contact">
+    <div class="wrap reveal">
+      <span class="section-label">Get a Quote</span>
+      <h2>Ready to start your kitchen?</h2>
+      <p class="sub">Tell us about your kitchen, and we'll prepare a ready message you can send us on WhatsApp in seconds.</p>
+      <form class="quote-form" id="quoteForm">
+        <div class="qf-group"><span class="qf-label">Kitchen shape</span>
+          <div class="qf-chips" role="radiogroup" aria-label="Kitchen shape">
+            <label class="chip"><input type="radio" name="shape" value="Straight line" checked><span>Straight line</span></label>
+            <label class="chip"><input type="radio" name="shape" value="L-shape"><span>L-shape</span></label>
+            <label class="chip"><input type="radio" name="shape" value="U-shape"><span>U-shape</span></label>
+          </div>
+        </div>
+        <div class="qf-group"><label class="qf-label" for="qLength">Approximate length (meters)</label><input class="qf-input" type="number" id="qLength" min="0.5" step="0.5" placeholder="e.g. 4"></div>
+        <div class="qf-group"><span class="qf-label">Preferred material</span>
+          <div class="qf-chips" role="radiogroup" aria-label="Preferred material">
+            <label class="chip"><input type="radio" name="material" value="Quartz" checked><span>Quartz</span></label>
+            <label class="chip"><input type="radio" name="material" value="Marble"><span>Marble</span></label>
+            <label class="chip"><input type="radio" name="material" value="Granite"><span>Granite</span></label>
+            <label class="chip"><input type="radio" name="material" value="Not sure yet"><span>Not sure yet</span></label>
+          </div>
+        </div>
+        <div class="qf-group"><label class="qf-label" for="qName">Your name (optional)</label><input class="qf-input" type="text" id="qName" placeholder="Your name"></div>
+        <button type="submit" class="btn-primary">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 20l1.6-4.8A8 8 0 1 1 9 18.6L4 20Z"/><path d="M9 10.5c.4 2 2 3.6 4 4" stroke-linecap="round"/></svg>
+          Request a quote on WhatsApp
+        </button>
+      </form>
+      <span class="number">Or call us directly: 01123883389</span>
+      <div class="address">
+        <p class="visit-line">Want to see the materials in person before deciding? Visit our workshop:</p>
+        <p>New Cairo, Third Settlement, Al-Alf Masna' Zone, Factory No. 604</p>
+        <a href="https://maps.app.goo.gl/WRzanYSA9S2ECFvf6" target="_blank" rel="noopener">Open location on Google Maps</a>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<footer class="footer">
+  <div class="footer-logo logo-mark" role="img" aria-label="Contrast Stone"></div>
+  <div>© 2026 Contrast Stone · <a href="https://www.facebook.com/contraststone" target="_blank" rel="noopener">Facebook</a></div>
+</footer>
+
+<script>
+  if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches && 'IntersectionObserver' in window) {
+    var io = new IntersectionObserver(function(entries){ entries.forEach(function(e){ if (e.isIntersecting){ e.target.classList.add('is-visible'); io.unobserve(e.target); } }); }, { threshold: 0.12 });
+    document.querySelectorAll('.reveal').forEach(function(el){ io.observe(el); });
+  } else { document.querySelectorAll('.reveal').forEach(function(el){ el.classList.add('is-visible'); }); }
+
+  var filterBtns = document.querySelectorAll('.filter-btn');
+  var tiles = document.querySelectorAll('.g-tile');
+  filterBtns.forEach(function(btn){
+    btn.addEventListener('click', function(){
+      filterBtns.forEach(function(b){ b.classList.remove('active'); });
+      btn.classList.add('active');
+      var f = btn.getAttribute('data-filter');
+      tiles.forEach(function(t){
+        if (f === 'all' || t.getAttribute('data-material') === f) t.classList.remove('hide');
+        else t.classList.add('hide');
+      });
+    });
+  });
+
+  var navToggle = document.getElementById('navToggle');
+  var mobileMenu = document.getElementById('mobileMenu');
+  var mobileMenuClose = document.getElementById('mobileMenuClose');
+  if (navToggle && mobileMenu) {
+    navToggle.addEventListener('click', function(){ mobileMenu.classList.add('open'); });
+    mobileMenuClose.addEventListener('click', function(){ mobileMenu.classList.remove('open'); });
+    mobileMenu.querySelectorAll('a').forEach(function(a){
+      a.addEventListener('click', function(){ mobileMenu.classList.remove('open'); });
+    });
+  }
+
+  var quoteForm = document.getElementById('quoteForm');
+  if (quoteForm) {
+    quoteForm.addEventListener('submit', function(e){
+      e.preventDefault();
+      var shapeEl = quoteForm.querySelector('input[name="shape"]:checked');
+      var materialEl = quoteForm.querySelector('input[name="material"]:checked');
+      var shape = shapeEl ? shapeEl.value : 'Not specified';
+      var material = materialEl ? materialEl.value : 'Not specified';
+      var length = document.getElementById('qLength').value;
+      var name = document.getElementById('qName').value.trim();
+      var lines = ['Hello, I\'d like a quote for a kitchen:'];
+      lines.push('- Shape: ' + shape);
+      lines.push('- Approximate length: ' + (length ? length + ' meters' : 'Not specified'));
+      lines.push('- Preferred material: ' + material);
+      if (name) lines.push('- Name: ' + name);
+      var msg = encodeURIComponent(lines.join('\n'));
+      window.open('https://wa.me/201123883389?text=' + msg, '_blank');
+    });
+  }
+</script>
+
+</body>
+</html>
