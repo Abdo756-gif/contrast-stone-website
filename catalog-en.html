@@ -77,9 +77,16 @@
 
   .mat-grid{display:grid; grid-template-columns:repeat(auto-fill,minmax(260px,1fr)); gap:24px;}
   .mat-card{background:var(--charcoal); color:var(--cream); overflow:hidden; border-radius:3px; display:flex; flex-direction:column;}
-  .mat-photo{aspect-ratio:4/3; overflow:hidden; background:var(--charcoal-2);}
+  .mat-photo{aspect-ratio:4/3; overflow:hidden; background:var(--charcoal-2); position:relative;}
   .mat-photo img{width:100%; height:100%; object-fit:cover; display:block; transition:transform .5s ease;}
   .mat-card:hover .mat-photo img{transform:scale(1.05);}
+  .mat-photo-nav{position:absolute; top:50%; transform:translateY(-50%); width:30px; height:30px; border-radius:50%; background:rgba(24,20,16,.55); border:none; color:var(--cream); display:flex; align-items:center; justify-content:center; cursor:pointer; z-index:2;}
+  .mat-photo-nav svg{width:16px; height:16px;}
+  .mat-photo-nav.prev{left:10px;}
+  .mat-photo-nav.next{right:10px;}
+  .mat-dots{position:absolute; bottom:10px; left:0; right:0; display:flex; justify-content:center; gap:6px; z-index:2;}
+  .mat-dot{width:6px; height:6px; border-radius:50%; background:rgba(239,230,216,.4); cursor:pointer; border:none; padding:0;}
+  .mat-dot.active{background:var(--clay-bright);}
   .mat-body{padding:20px 22px 22px; display:flex; flex-direction:column; gap:10px; flex:1;}
   .mat-name{font-family:var(--disp); font-weight:700; font-size:1.15rem;}
   .mat-meta{display:flex; flex-direction:column; gap:4px; font-size:.85rem; color:var(--taupe);}
@@ -181,18 +188,39 @@
   var CATALOG = {
     indian: {
       label: "Indian",
-      items: [
-        // مثال (احذفه لما تضيف خامات حقيقية):
-        // { name: "اسم الخامة", image: "materials/indian-1.jpg", thickness: "2 سم", tableSize: "320 × 160 سم" }
-      ]
+      items: []
     },
     turkish: {
       label: "Turkish",
-      items: []
+      items: [
+        { name: "Alba Via", image: "alba-via.jpg", thickness: "2 cm", tableSize: "3.30 × 1.65 m", color: "Beige with brown veins" },
+        { name: "Calacatta Miranda", image: "calacatta-miranda-material.jpg", thickness: "2 cm", tableSize: "3.30 × 1.65 m", color: "White with thin gray veins" },
+        { name: "Calacatta Sueste", image: "calacatta-sueste-material.jpg", thickness: "2 cm", tableSize: "3.30 × 1.65 m", color: "White with a smoky gray-brown cloud" },
+        { name: "Dreamy", image: "dreamy-material.jpg", thickness: "2 cm", tableSize: "3.30 × 1.65 m", color: "White with gray veins" },
+        { name: "Elysee", image: "elysee-material.jpg", thickness: "2 cm", tableSize: "3.30 × 1.65 m", color: "Solid plain white" },
+        { name: "Hielo", image: "hielo-material.jpg", thickness: "2 cm", tableSize: "3.30 × 1.65 m", color: "White with scattered gray flecks" },
+        { name: "Idyma", image: "idyma-material.jpg", thickness: "2 cm", tableSize: "3.30 × 1.65 m", color: "Grayish greige" },
+        { name: "Magnificent", image: "magnificent-material.jpg", thickness: "2 cm", tableSize: "3.30 × 1.65 m", color: "Dark gray with white veins" },
+        { name: "Majestic Brown", image: "majestic-brown-material.jpg", thickness: "2 cm", tableSize: "3.30 × 1.65 m", color: "White with gold-brown veins" },
+        { name: "Narcissus", image: "narcissus-material.jpg", thickness: "2 cm", tableSize: "3.30 × 1.65 m", color: "White with dense small gray specks" },
+        { name: "Regina", image: "regina-material.jpg", thickness: "2 cm", tableSize: "3.30 × 1.65 m", color: "Predominantly grayish brown" },
+        { name: "Regulus", image: "regulus-material.jpg", thickness: "2 cm", tableSize: "3.30 × 1.65 m", color: "Dark gray with glass flecks" },
+        { name: "Snow Flake", image: "snow-flake-material.jpg", thickness: "2 cm", tableSize: "3.30 × 1.65 m", color: "White with small gray specks" },
+        { name: "Starlet", image: "starlet-kitchen-1.jpg", thickness: "2 cm", tableSize: "3.30 × 1.65 m", color: "White with glass flecks" },
+        { name: "Storia", image: "storia-material.jpg", thickness: "2 cm", tableSize: "3.30 × 1.65 m", color: "White with medium gray veins" }
+      ]
     },
     german: {
       label: "German",
-      items: []
+      items: [
+        { name: "Planet Halley", images: ["planet-halley-material.jpg","planet-halley-material-2.jpg","planet-halley-material-3.jpg"], thickness: "2 cm", tableSize: "3.20 × 1.65 m", color: "Black with white and orange veins" },
+        { name: "Planet Interstellar Cloud", image: "planet-interstellar-cloud-material.png", thickness: "2 cm", tableSize: "3.20 × 1.65 m", color: "White with thin gray veins" },
+        { name: "Planet Mercury", images: ["planet-mercury-material.jpg","planet-mercury-material-2.jpg"], thickness: "2 cm", tableSize: "3.20 × 1.65 m", color: "Gray flecked with white and hints of shell" },
+        { name: "Planet Mars", image: "planet-mars-material.jpg", thickness: "2 cm", tableSize: "3.20 × 1.65 m", color: "Deep brown-black with white veins" },
+        { name: "Planet Pluto", images: ["planet-pluto-material.jpg","planet-pluto-material-2.jpg"], thickness: "2 cm", tableSize: "3.20 × 1.65 m", color: "Black with white veins" },
+        { name: "Planet Jupiter", images: ["planet-jupiter-material.jpg","planet-jupiter-material-2.jpg"], thickness: "2 cm", tableSize: "3.20 × 1.65 m", color: "Soft brown flecked with white veins" },
+        { name: "Planet Tempel", images: ["planet-tempel-material.jpg","planet-tempel-material-2.jpg"], thickness: "2 cm", tableSize: "3.20 × 1.65 m", color: "White with white and orange veins" }
+      ]
     },
     spanish: {
       label: "Spanish",
@@ -203,6 +231,7 @@
   var LABELS = {
     thickness: "Thickness",
     tableSize: "Slab Size",
+    color: "Color",
     inquire: "Ask on WhatsApp",
     emptyTitle: "Materials coming soon",
     emptyBody: "We're still preparing photos and details for this section."
@@ -213,10 +242,23 @@
     return 'https://wa.me/201123883389?text=' + msg;
   }
 
+  var cardCounter = 0;
+
   function renderCard(item){
-    var photo = item.image
-      ? '<div class="mat-photo"><img src="' + item.image + '" alt="' + item.name + '" loading="lazy"></div>'
-      : '';
+    var imgs = item.images && item.images.length ? item.images : (item.image ? [item.image] : []);
+    var cardId = 'mc' + (cardCounter++);
+    var photo = '';
+    if (imgs.length){
+      var slides = imgs.map(function(src, i){
+        return '<img src="' + src + '" alt="' + item.name + '" loading="lazy" style="' + (i === 0 ? '' : 'display:none;') + '" data-slide="' + i + '">';
+      }).join('');
+      var nav = imgs.length > 1 ? '' +
+        '<button class="mat-photo-nav prev" data-nav="prev" aria-label="Previous"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 6l-6 6 6 6"/></svg></button>' +
+        '<button class="mat-photo-nav next" data-nav="next" aria-label="Next"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 6l6 6-6 6"/></svg></button>' +
+        '<div class="mat-dots">' + imgs.map(function(_, i){ return '<button class="mat-dot' + (i === 0 ? ' active' : '') + '" data-dot="' + i + '" aria-label="Photo ' + (i+1) + '"></button>'; }).join('') + '</div>'
+        : '';
+      photo = '<div class="mat-photo" id="' + cardId + '" data-count="' + imgs.length + '">' + slides + nav + '</div>';
+    }
     return '' +
       '<div class="mat-card">' +
         photo +
@@ -225,6 +267,7 @@
           '<div class="mat-meta">' +
             (item.thickness ? '<span><b>' + LABELS.thickness + ':</b> ' + item.thickness + '</span>' : '') +
             (item.tableSize ? '<span><b>' + LABELS.tableSize + ':</b> ' + item.tableSize + '</span>' : '') +
+            (item.color ? '<span><b>' + LABELS.color + ':</b> ' + item.color + '</span>' : '') +
           '</div>' +
           '<a class="mat-cta" href="' + waLink(item.name) + '" target="_blank" rel="noopener">' +
             LABELS.inquire +
@@ -247,6 +290,28 @@
 
   var root = document.getElementById('catalogRoot');
   root.innerHTML = Object.keys(CATALOG).map(function(key){ return renderGroup(key, CATALOG[key]); }).join('');
+
+  root.addEventListener('click', function(e){
+    var navBtn = e.target.closest('[data-nav]');
+    var dotBtn = e.target.closest('[data-dot]');
+    if (!navBtn && !dotBtn) return;
+    var photoEl = e.target.closest('.mat-photo');
+    if (!photoEl) return;
+    var slides = photoEl.querySelectorAll('img[data-slide]');
+    var dots = photoEl.querySelectorAll('.mat-dot');
+    var count = slides.length;
+    var current = 0;
+    slides.forEach(function(s, i){ if (s.style.display !== 'none') current = i; });
+    var next = current;
+    if (navBtn) {
+      var dir = navBtn.getAttribute('data-nav');
+      next = dir === 'next' ? (current + 1) % count : (current - 1 + count) % count;
+    } else if (dotBtn) {
+      next = parseInt(dotBtn.getAttribute('data-dot'), 10);
+    }
+    slides.forEach(function(s, i){ s.style.display = i === next ? '' : 'none'; });
+    dots.forEach(function(d, i){ d.classList.toggle('active', i === next); });
+  });
 
   var tabs = document.querySelectorAll('.origin-tab');
   var groups = document.querySelectorAll('.origin-group');
