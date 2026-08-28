@@ -87,6 +87,19 @@
   .mat-dots{position:absolute; bottom:10px; left:0; right:0; display:flex; justify-content:center; gap:6px; z-index:2;}
   .mat-dot{width:6px; height:6px; border-radius:50%; background:rgba(239,230,216,.4); cursor:pointer; border:none; padding:0;}
   .mat-dot.active{background:var(--clay-bright);}
+  .mat-photo img[data-slide]{cursor:zoom-in;}
+
+  /* lightbox */
+  .lightbox{position:fixed; inset:0; z-index:100; background:rgba(10,8,6,.94); display:none; align-items:center; justify-content:center; padding:50px;}
+  .lightbox.open{display:flex;}
+  .lightbox img{max-width:100%; max-height:100%; object-fit:contain; box-shadow:0 20px 70px rgba(0,0,0,.6); border-radius:2px;}
+  .lightbox-close{position:absolute; top:22px; left:22px; width:44px; height:44px; border-radius:50%; background:rgba(239,230,216,.12); border:1px solid rgba(239,230,216,.3); color:var(--cream); display:flex; align-items:center; justify-content:center; cursor:pointer;}
+  .lightbox-close svg{width:20px; height:20px;}
+  .lightbox-nav{position:absolute; top:50%; transform:translateY(-50%); width:48px; height:48px; border-radius:50%; background:rgba(239,230,216,.12); border:1px solid rgba(239,230,216,.3); color:var(--cream); display:flex; align-items:center; justify-content:center; cursor:pointer;}
+  .lightbox-nav svg{width:22px; height:22px;}
+  .lightbox-nav.prev{left:22px;}
+  .lightbox-nav.next{right:22px;}
+  @media (max-width:700px){.lightbox{padding:20px;} .lightbox-nav{width:38px; height:38px;} .lightbox-close{width:38px; height:38px; top:14px; left:14px;}}
   .mat-body{padding:20px 22px 22px; display:flex; flex-direction:column; gap:10px; flex:1;}
   .mat-name{font-family:var(--disp); font-weight:700; font-size:1.15rem;}
   .mat-meta{display:flex; flex-direction:column; gap:4px; font-size:.85rem; color:var(--taupe);}
@@ -169,6 +182,19 @@
   </section>
 
 </main>
+
+<div class="lightbox" id="lightbox" aria-hidden="true">
+  <button class="lightbox-close" id="lightboxClose" aria-label="إغلاق">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 6l12 12M18 6L6 18"/></svg>
+  </button>
+  <button class="lightbox-nav prev" id="lightboxPrev" aria-label="السابق">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 6l-6 6 6 6"/></svg>
+  </button>
+  <img id="lightboxImg" src="" alt="">
+  <button class="lightbox-nav next" id="lightboxNext" aria-label="التالي">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 6l6 6-6 6"/></svg>
+  </button>
+</div>
 
 <footer class="footer">
   <div class="footer-logo logo-mark" role="img" aria-label="كونتراست ستون"></div>
@@ -294,6 +320,16 @@
   root.addEventListener('click', function(e){
     var navBtn = e.target.closest('[data-nav]');
     var dotBtn = e.target.closest('[data-dot]');
+    var imgEl = e.target.closest('img[data-slide]');
+
+    if (!navBtn && !dotBtn && imgEl) {
+      var photoEl0 = imgEl.closest('.mat-photo');
+      var allImgs = Array.prototype.map.call(photoEl0.querySelectorAll('img[data-slide]'), function(im){ return im.getAttribute('src'); });
+      var startIndex = parseInt(imgEl.getAttribute('data-slide'), 10);
+      openLightbox(allImgs, startIndex);
+      return;
+    }
+
     if (!navBtn && !dotBtn) return;
     var photoEl = e.target.closest('.mat-photo');
     if (!photoEl) return;
@@ -311,6 +347,44 @@
     }
     slides.forEach(function(s, i){ s.style.display = i === next ? '' : 'none'; });
     dots.forEach(function(d, i){ d.classList.toggle('active', i === next); });
+  });
+
+  /* lightbox */
+  var lightbox = document.getElementById('lightbox');
+  var lightboxImg = document.getElementById('lightboxImg');
+  var lightboxClose = document.getElementById('lightboxClose');
+  var lightboxPrev = document.getElementById('lightboxPrev');
+  var lightboxNext = document.getElementById('lightboxNext');
+  var lbImages = [];
+  var lbIndex = 0;
+
+  function showLbImage(){
+    lightboxImg.src = lbImages[lbIndex];
+    var multi = lbImages.length > 1;
+    lightboxPrev.style.display = multi ? '' : 'none';
+    lightboxNext.style.display = multi ? '' : 'none';
+  }
+  function openLightbox(images, startIndex){
+    lbImages = images;
+    lbIndex = startIndex || 0;
+    showLbImage();
+    lightbox.classList.add('open');
+    lightbox.setAttribute('aria-hidden', 'false');
+  }
+  function closeLightbox(){
+    lightbox.classList.remove('open');
+    lightbox.setAttribute('aria-hidden', 'true');
+    lightboxImg.src = '';
+  }
+  lightboxClose.addEventListener('click', closeLightbox);
+  lightbox.addEventListener('click', function(e){ if (e.target === lightbox) closeLightbox(); });
+  lightboxPrev.addEventListener('click', function(){ lbIndex = (lbIndex - 1 + lbImages.length) % lbImages.length; showLbImage(); });
+  lightboxNext.addEventListener('click', function(){ lbIndex = (lbIndex + 1) % lbImages.length; showLbImage(); });
+  document.addEventListener('keydown', function(e){
+    if (!lightbox.classList.contains('open')) return;
+    if (e.key === 'Escape') closeLightbox();
+    if (e.key === 'ArrowLeft') { lbIndex = (lbIndex + 1) % lbImages.length; showLbImage(); }
+    if (e.key === 'ArrowRight') { lbIndex = (lbIndex - 1 + lbImages.length) % lbImages.length; showLbImage(); }
   });
 
   var tabs = document.querySelectorAll('.origin-tab');
