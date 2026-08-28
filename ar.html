@@ -54,9 +54,10 @@
   .btn-white{background:#fff;color:var(--ink);}
 
   .stats{background:var(--green);padding:0;}
-  .stats .container{display:grid;grid-template-columns:repeat(4,1fr);}
+  .stats .container{display:grid;grid-template-columns:repeat(5,1fr);}
   .stat{padding:36px 20px;text-align:center;border-left:1px solid rgba(255,255,255,.12);}
   .stat:last-child{border-left:none;}
+  @media(max-width:900px){.stats .container{grid-template-columns:repeat(3,1fr);}}
   @media(max-width:700px){.stats .container{grid-template-columns:1fr 1fr;}.stat{border-left:none;border-bottom:1px solid rgba(255,255,255,.12);}}
   .stat b{display:block;font-size:30px;font-weight:900;color:#D9B98A;}
   .stat span{font-size:12px;color:#D9D2C1;font-weight:600;}
@@ -167,10 +168,11 @@
 
 <div class="stats">
   <div class="container">
-    <div class="stat"><b>+9</b><span>سنوات خبرة</span></div>
-    <div class="stat"><b>4</b><span>دول توريد خامات</span></div>
+    <div class="stat"><b data-count="9" data-suffix="+">0</b><span>سنوات خبرة</span></div>
+    <div class="stat"><b data-count="600" data-suffix="+">0</b><span>مشروع منفذ</span></div>
+    <div class="stat"><b data-count="4" data-suffix="">0</b><span>دول توريد خامات</span></div>
     <div class="stat"><b>15-20</b><span>يوم للتركيب</span></div>
-    <div class="stat"><b>100%</b><span>تغطية مصر</span></div>
+    <div class="stat"><b data-count="100" data-suffix="%">0</b><span>تغطية مصر</span></div>
   </div>
 </div>
 
@@ -269,6 +271,43 @@
     document.getElementById('siteHeader').classList.toggle('scrolled', window.scrollY > 60);
     document.getElementById('topbarSocial').classList.toggle('scrolled', window.scrollY > 60);
   });
+</script>
+
+<script>
+  (function(){
+    var counters = document.querySelectorAll('.stat b[data-count]');
+    var done = false;
+    function animate(){
+      if (done) return;
+      done = true;
+      counters.forEach(function(el){
+        var target = parseInt(el.getAttribute('data-count'), 10);
+        var suffix = el.getAttribute('data-suffix') || '';
+        var duration = 1200;
+        var startTime = null;
+        function step(ts){
+          if (!startTime) startTime = ts;
+          var progress = Math.min((ts - startTime) / duration, 1);
+          var value = Math.floor(progress * target);
+          el.textContent = value + suffix;
+          if (progress < 1) requestAnimationFrame(step);
+          else el.textContent = target + suffix;
+        }
+        requestAnimationFrame(step);
+      });
+    }
+    var statsSection = document.querySelector('.stats');
+    if (statsSection && 'IntersectionObserver' in window){
+      var obs = new IntersectionObserver(function(entries){
+        entries.forEach(function(entry){
+          if (entry.isIntersecting) animate();
+        });
+      }, {threshold:0.4});
+      obs.observe(statsSection);
+    } else {
+      animate();
+    }
+  })();
 </script>
 </body>
 </html>

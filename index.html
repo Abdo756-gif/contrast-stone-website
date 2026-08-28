@@ -25,7 +25,7 @@
   .container{max-width:1180px;margin:0 auto;padding:0 32px;}
   @media(max-width:640px){.container{padding:0 20px;}}
 
-  header{position:fixed;top:42px;left:0;right:0;z-index:100;display:flex;align-items:center;justify-content:space-between;padding:16px 40px;background:linear-gradient(to bottom, rgba(20,17,13,.55) 0%, rgba(20,17,13,0) 100%);transition:background .3s ease, padding .3s ease, box-shadow .3s ease, top .3s ease;}
+  header{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:center;justify-content:space-between;padding:16px 40px;background:linear-gradient(to bottom, rgba(20,17,13,.55) 0%, rgba(20,17,13,0) 100%);transition:background .3s ease, padding .3s ease, box-shadow .3s ease, top .3s ease;}
   header.scrolled{background:#fff;padding:10px 40px;box-shadow:0 1px 0 var(--line);}
   header.scrolled .logo img{filter:none;}
   header.scrolled nav a{color:var(--ink-dim);opacity:1;}
@@ -54,9 +54,10 @@
   .btn-white{background:#fff;color:var(--ink);}
 
   .stats{background:var(--green);padding:0;}
-  .stats .container{display:grid;grid-template-columns:repeat(4,1fr);}
+  .stats .container{display:grid;grid-template-columns:repeat(5,1fr);}
   .stat{padding:36px 20px;text-align:center;border-left:1px solid rgba(255,255,255,.12);}
   .stat:last-child{border-left:none;}
+  @media(max-width:900px){.stats .container{grid-template-columns:repeat(3,1fr);}}
   @media(max-width:700px){.stats .container{grid-template-columns:1fr 1fr;}.stat{border-left:none;border-bottom:1px solid rgba(255,255,255,.12);}}
   .stat b{display:block;font-size:30px;font-weight:900;color:#D9B98A;}
   .stat span{font-size:12px;color:#D9D2C1;font-weight:600;}
@@ -114,29 +115,19 @@
   .wa-float{position:fixed;bottom:26px;left:26px;z-index:200;width:58px;height:58px;border-radius:50%;background:#25D366;display:flex;align-items:center;justify-content:center;color:#fff;font-size:26px;box-shadow:0 8px 24px rgba(0,0,0,.3);animation:pulse 2.2s infinite;}
   @keyframes pulse{0%{box-shadow:0 0 0 0 rgba(37,211,102,.5),0 8px 24px rgba(0,0,0,.3);}70%{box-shadow:0 0 0 14px rgba(37,211,102,0),0 8px 24px rgba(0,0,0,.3);}100%{box-shadow:0 0 0 0 rgba(37,211,102,0),0 8px 24px rgba(0,0,0,.3);}}
 
-  .topbar-social{position:fixed;top:0;left:0;right:0;z-index:101;display:flex;justify-content:flex-end;gap:14px;padding:8px 40px;background:rgba(20,17,13,.55);backdrop-filter:blur(4px);}
-  .topbar-social.scrolled{background:#1F1B16;}
-  .topbar-social a{width:26px;height:26px;display:flex;align-items:center;justify-content:center;color:#fff;opacity:.85;transition:opacity .2s;}
-  .topbar-social a:hover{opacity:1;}
-  .topbar-social svg{width:16px;height:16px;}
+
+  .social-nav{display:flex;align-items:center;gap:16px;margin-left:30px;padding-left:30px;border-left:1px solid rgba(255,255,255,.25);}
+  header.scrolled .social-nav{border-left-color:var(--line);}
+  .social-nav a{color:#fff;opacity:.85;transition:opacity .2s;display:flex;}
+  .social-nav a:hover{opacity:1;}
+  .social-nav svg{width:16px;height:16px;}
+  header.scrolled .social-nav a{color:var(--ink-dim);}
+  header.scrolled .social-nav a:hover{color:var(--orange);}
+  @media(max-width:1050px){.social-nav{display:none;}}
 </style>
 </head>
 <body>
 
-<div class="topbar-social" id="topbarSocial">
-  <a href="https://wa.me/201123883389" target="_blank" rel="noopener" aria-label="WhatsApp">
-    <svg viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M16.001 3C9.11 3 3.5 8.611 3.5 15.5c0 2.29.62 4.44 1.7 6.29L3 29l7.4-2.15A12.44 12.44 0 0 0 16.001 28C22.891 28 28.5 22.39 28.5 15.5S22.891 3 16.001 3Z" fill="currentColor"/></svg>
-  </a>
-  <a href="https://www.facebook.com/contraststone" target="_blank" rel="noopener" aria-label="Facebook">
-    <svg viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg"><path d="M22 12.06C22 6.5 17.52 2 12 2S2 6.5 2 12.06c0 5 3.66 9.15 8.44 9.94v-7.03H7.9v-2.9h2.54V9.85c0-2.5 1.49-3.89 3.77-3.89 1.09 0 2.24.2 2.24.2v2.46h-1.26c-1.24 0-1.63.77-1.63 1.56v1.88h2.78l-.44 2.9h-2.34V22c4.78-.79 8.44-4.94 8.44-9.94Z"/></svg>
-  </a>
-  <a href="#" target="_blank" rel="noopener" aria-label="Instagram">
-    <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><rect x="2" y="2" width="20" height="20" rx="5" stroke="currentColor" stroke-width="2"/><circle cx="12" cy="12" r="4.2" stroke="currentColor" stroke-width="2"/><circle cx="17.4" cy="6.6" r="1.15" fill="currentColor"/></svg>
-  </a>
-  <a href="#" target="_blank" rel="noopener" aria-label="TikTok">
-    <svg viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg"><path d="M16.5 2h-3v13.6a2.9 2.9 0 1 1-2.06-2.78V9.7a6 6 0 1 0 5.06 5.93V9.03a7.6 7.6 0 0 0 4.5 1.46V7.4a4.6 4.6 0 0 1-4.5-4.5V2Z"/></svg>
-  </a>
-</div>
 <header id="siteHeader">
   <a href="index.html" class="logo"><img src="logo-header.png" alt="Contrast Stone"></a>
   <nav><ul>
@@ -145,7 +136,13 @@
     <li><a href="catalog-en.html">Catalog</a></li>
     <li><a href="#testimonials">Reviews</a></li>
     <li><a href="#contact">Contact</a></li>
-  </ul></nav>
+  </ul><div class="social-nav">
+      <a href="https://wa.me/201123883389" target="_blank" rel="noopener" aria-label="WhatsApp"><svg viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M16.001 3C9.11 3 3.5 8.611 3.5 15.5c0 2.29.62 4.44 1.7 6.29L3 29l7.4-2.15A12.44 12.44 0 0 0 16.001 28C22.891 28 28.5 22.39 28.5 15.5S22.891 3 16.001 3Z" fill="currentColor"/></svg></a>
+      <a href="https://www.facebook.com/contraststone" target="_blank" rel="noopener" aria-label="Facebook"><svg viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg"><path d="M22 12.06C22 6.5 17.52 2 12 2S2 6.5 2 12.06c0 5 3.66 9.15 8.44 9.94v-7.03H7.9v-2.9h2.54V9.85c0-2.5 1.49-3.89 3.77-3.89 1.09 0 2.24.2 2.24.2v2.46h-1.26c-1.24 0-1.63.77-1.63 1.56v1.88h2.78l-.44 2.9h-2.34V22c4.78-.79 8.44-4.94 8.44-9.94Z"/></svg></a>
+      <a href="#" target="_blank" rel="noopener" aria-label="Instagram"><svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><rect x="2" y="2" width="20" height="20" rx="5" stroke="currentColor" stroke-width="2"/><circle cx="12" cy="12" r="4.2" stroke="currentColor" stroke-width="2"/><circle cx="17.4" cy="6.6" r="1.15" fill="currentColor"/></svg></a>
+      <a href="#" target="_blank" rel="noopener" aria-label="TikTok"><svg viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg"><path d="M16.5 2h-3v13.6a2.9 2.9 0 1 1-2.06-2.78V9.7a6 6 0 1 0 5.06 5.93V9.03a7.6 7.6 0 0 0 4.5 1.46V7.4a4.6 4.6 0 0 1-4.5-4.5V2Z"/></svg></a>
+    </div>
+  </nav>
   <div class="nav-right">
     <a href="ar.html" class="lang-switch">العربية</a>
     <a href="https://wa.me/201123883389" target="_blank" rel="noopener" class="nav-cta">Get a Quote</a>
@@ -171,10 +168,11 @@
 
 <div class="stats">
   <div class="container">
-    <div class="stat"><b>9+</b><span>Years of Experience</span></div>
-    <div class="stat"><b>4</b><span>Sourcing Countries</span></div>
+    <div class="stat"><b data-count="9" data-suffix="+">0</b><span>Years of Experience</span></div>
+    <div class="stat"><b data-count="600" data-suffix="+">0</b><span>Projects Completed</span></div>
+    <div class="stat"><b data-count="4" data-suffix="">0</b><span>Sourcing Countries</span></div>
     <div class="stat"><b>15-20</b><span>Days to Install</span></div>
-    <div class="stat"><b>100%</b><span>Coverage of Egypt</span></div>
+    <div class="stat"><b data-count="100" data-suffix="%">0</b><span>Coverage of Egypt</span></div>
   </div>
 </div>
 
@@ -273,6 +271,43 @@
     document.getElementById('siteHeader').classList.toggle('scrolled', window.scrollY > 60);
     document.getElementById('topbarSocial').classList.toggle('scrolled', window.scrollY > 60);
   });
+</script>
+
+<script>
+  (function(){
+    var counters = document.querySelectorAll('.stat b[data-count]');
+    var done = false;
+    function animate(){
+      if (done) return;
+      done = true;
+      counters.forEach(function(el){
+        var target = parseInt(el.getAttribute('data-count'), 10);
+        var suffix = el.getAttribute('data-suffix') || '';
+        var duration = 1200;
+        var startTime = null;
+        function step(ts){
+          if (!startTime) startTime = ts;
+          var progress = Math.min((ts - startTime) / duration, 1);
+          var value = Math.floor(progress * target);
+          el.textContent = value + suffix;
+          if (progress < 1) requestAnimationFrame(step);
+          else el.textContent = target + suffix;
+        }
+        requestAnimationFrame(step);
+      });
+    }
+    var statsSection = document.querySelector('.stats');
+    if (statsSection && 'IntersectionObserver' in window){
+      var obs = new IntersectionObserver(function(entries){
+        entries.forEach(function(entry){
+          if (entry.isIntersecting) animate();
+        });
+      }, {threshold:0.4});
+      obs.observe(statsSection);
+    } else {
+      animate();
+    }
+  })();
 </script>
 </body>
 </html>
