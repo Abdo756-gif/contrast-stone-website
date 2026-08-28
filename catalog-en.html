@@ -77,8 +77,8 @@
 
   .mat-grid{display:grid; grid-template-columns:repeat(auto-fill,minmax(260px,1fr)); gap:24px;}
   .mat-card{background:var(--charcoal); color:var(--stone); overflow:hidden; border-radius:14px; box-shadow:0 4px 20px rgba(0,0,0,.06); display:flex; flex-direction:column;}
-  .mat-photo{aspect-ratio:4/3; overflow:hidden; background:var(--charcoal-2); position:relative; border-radius:14px 14px 0 0;}
-  .mat-photo img{width:100%; height:100%; object-fit:cover; display:block; transition:transform .5s ease;}
+  .mat-photo{aspect-ratio:4/3; overflow:hidden; background:var(--charcoal-2); position:relative; border-radius:14px 14px 0 0; transform:translateZ(0); -webkit-transform:translateZ(0); backface-visibility:hidden;}
+  .mat-photo img{width:100%; height:100%; object-fit:cover; display:block; transition:transform .5s ease; image-rendering:auto;}
   .mat-card:hover .mat-photo img{transform:scale(1.05);}
   .mat-photo-nav{position:absolute; top:50%; transform:translateY(-50%); width:30px; height:30px; border-radius:50%; background:rgba(24,20,16,.55); border:none; color:var(--cream); display:flex; align-items:center; justify-content:center; cursor:pointer; z-index:2;}
   .mat-photo-nav svg{width:16px; height:16px;}
