@@ -86,11 +86,14 @@
   .gallery-strip{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;}
   @media(max-width:760px){.gallery-strip{grid-template-columns:1fr 1fr;}}
   @media(max-width:480px){.gallery-strip{grid-template-columns:1fr;}}
-  .gallery-strip .g{position:relative;aspect-ratio:4/5;border-radius:14px;overflow:hidden;}
+  .gallery-strip .g{position:relative;aspect-ratio:4/5;border-radius:14px;overflow:hidden;background-size:cover;background-position:center;transition:background-size .5s;}
   .gallery-strip .g .cap{position:absolute;bottom:0;left:0;right:0;padding:14px 16px;background:linear-gradient(to top,rgba(38,34,28,.8),transparent);color:#fff;font-size:13px;font-weight:700;opacity:0;transition:.3s;}
   .gallery-strip .g:hover .cap{opacity:1;}
-  .gallery-strip .g img{transition:transform .5s;}
-  .gallery-strip .g:hover img{transform:scale(1.06);}
+  .gallery-strip .g:hover{background-size:112%;}
+
+  /* Image protection */
+  img{-webkit-user-drag:none;user-drag:none;-webkit-touch-callout:none;user-select:none;-webkit-user-select:none;}
+  .g,.cat-card{-webkit-user-drag:none;user-drag:none;}
 
   .cta-banner{background:var(--orange);padding:80px 0;text-align:center;color:#fff;}
   .cta-banner h2{color:#fff;margin:0 auto 16px;max-width:100%;}
@@ -212,12 +215,12 @@
     <h2>Real Work, Real Clients</h2>
     <p class="lead">Snapshots from real Contrast Stone installations.</p>
     <div class="gallery-strip">
-      <div class="g"><img src="alba-via.jpg"><div class="cap">Alba Via</div></div>
-      <div class="g"><img src="calacata-miranda-1.jpg"><div class="cap">Calacata Miranda</div></div>
-      <div class="g"><img src="calacata-sueste-1.jpg"><div class="cap">Calacata Sueste</div></div>
-      <div class="g"><img src="storia-1.jpg"><div class="cap">Storia</div></div>
-      <div class="g"><img src="starlet-kitchen-1.jpg"><div class="cap">Starlet Quartz — Kitchen</div></div>
-      <div class="g"><img src="starlet-utility-1.jpg"><div class="cap">Starlet Quartz — Utility</div></div>
+      <div class="g" role="img" aria-label="Alba Via" style="background-image:url('alba-via.jpg')"><div class="cap">Alba Via</div></div>
+      <div class="g" role="img" aria-label="Calacata Miranda" style="background-image:url('calacata-miranda-1.jpg')"><div class="cap">Calacata Miranda</div></div>
+      <div class="g" role="img" aria-label="Calacata Sueste" style="background-image:url('calacata-sueste-1.jpg')"><div class="cap">Calacata Sueste</div></div>
+      <div class="g" role="img" aria-label="Storia" style="background-image:url('storia-1.jpg')"><div class="cap">Storia</div></div>
+      <div class="g" role="img" aria-label="Starlet Quartz — Kitchen" style="background-image:url('starlet-kitchen-1.jpg')"><div class="cap">Starlet Quartz — Kitchen</div></div>
+      <div class="g" role="img" aria-label="Starlet Quartz — Utility" style="background-image:url('starlet-utility-1.jpg')"><div class="cap">Starlet Quartz — Utility</div></div>
     </div>
   </div>
 </section>
@@ -268,6 +271,16 @@
     <path d="M12.13 9.86c-.243-.54-.5-.552-.732-.561-.19-.008-.407-.007-.625-.007-.218 0-.572.082-.871.408-.3.327-1.145 1.12-1.145 2.73 0 1.611 1.172 3.167 1.336 3.386.164.218 2.27 3.638 5.607 4.953 2.773 1.093 3.338.876 3.94.822.6-.055 1.936-.79 2.208-1.552.273-.762.273-1.416.191-1.552-.082-.136-.3-.218-.627-.382-.328-.164-1.936-.955-2.236-1.064-.3-.11-.518-.164-.736.164-.218.327-.845 1.063-1.036 1.28-.19.219-.382.246-.71.083-.328-.164-1.383-.51-2.635-1.626-.974-.868-1.632-1.94-1.822-2.267-.19-.328-.02-.505.144-.668.148-.147.328-.383.491-.574.164-.19.219-.328.328-.546.11-.219.055-.41-.027-.574-.082-.164-.717-1.786-.996-2.446Z" fill="#fff"/>
   </svg>
 </a>
+
+<script>
+  // Image protection: block right-click save and drag on photos
+  document.addEventListener('contextmenu', function(e){
+    if (e.target.tagName === 'IMG' || e.target.closest('.g,.cat-card')) e.preventDefault();
+  });
+  document.addEventListener('dragstart', function(e){
+    if (e.target.tagName === 'IMG') e.preventDefault();
+  });
+</script>
 
 <script>
   window.addEventListener('scroll', function(){
