@@ -89,10 +89,9 @@
   .g-masonry{column-count:1; column-gap:16px;}
   @media (min-width:640px){.g-masonry{column-count:2;}}
   @media (min-width:1000px){.g-masonry{column-count:3;}}
-  .g-tile{position:relative; margin-bottom:16px; break-inside:avoid; overflow:hidden; border-radius:2px;}
+  .g-tile{position:relative; margin-bottom:16px; break-inside:avoid; overflow:hidden; border-radius:2px; aspect-ratio:6/5; background-size:cover; background-position:center; transition:background-size .5s ease;}
   .g-tile.hide{display:none;}
-  .g-tile img{width:100%; height:auto; display:block; transition:transform .5s ease;}
-  .g-tile:hover img{transform:scale(1.04);}
+  .g-tile:hover{background-size:112%;}
   .g-tile .g-label{position:absolute; inset:auto 0 0 0; padding:18px 16px; background:linear-gradient(0deg, rgba(24,20,16,.85), transparent); color:var(--cream); font-size:.8rem; font-weight:600; letter-spacing:.03em;}
   .more-note{margin-top:36px; color:var(--taupe); font-size:.94rem;}
   .more-note a{color:var(--clay-bright); font-weight:700; border-bottom:1px solid currentColor;}
@@ -117,15 +116,18 @@
   .collections{margin-top:56px; display:flex; flex-direction:column; gap:2px;}
   .collection-row{position:relative; display:grid; grid-template-columns:1fr; overflow:hidden;}
   @media (min-width:820px){.collection-row{grid-template-columns:1.1fr 1fr;}}
-  .c-photo{position:relative; aspect-ratio:16/10; overflow:hidden;}
+  .c-photo{position:relative; aspect-ratio:16/10; overflow:hidden; background-size:cover; background-position:center;}
   @media (min-width:820px){.c-photo{aspect-ratio:auto; min-height:340px;}}
-  .c-photo img{width:100%; height:100%; object-fit:cover;}
   .c-info{background:var(--charcoal-2); color:var(--cream); padding:44px; display:flex; flex-direction:column; justify-content:center;}
   @media (max-width:700px){.c-info{padding:30px 24px;}}
   .c-info .c-eyebrow{font-size:.75rem; font-weight:600; letter-spacing:.14em; color:var(--clay-bright); margin-bottom:12px;}
   .c-info h3{font-family:var(--disp); font-weight:800; font-size:clamp(1.6rem,3vw,2.4rem); margin-bottom:14px;}
   .c-info p{color:var(--taupe); font-size:.94rem; max-width:420px;}
   @media (min-width:820px){.collection-row:nth-child(even) .c-photo{order:2;}}
+
+  /* Image protection */
+  img{-webkit-user-drag:none;user-drag:none;-webkit-touch-callout:none;user-select:none;-webkit-user-select:none;}
+  .g-tile,.c-photo{-webkit-user-drag:none;user-drag:none;}
 
   .faq-list{max-width:720px; margin-top:48px; display:flex; flex-direction:column;}
   .faq-item{border-bottom:1px solid var(--line-dark); padding:20px 0;}
@@ -251,12 +253,12 @@
         <button class="filter-btn" data-filter="starlet">Starlet</button>
       </div>
       <div class="g-masonry" id="galleryGrid">
-        <div class="g-tile" data-material="miranda"><img src="calacata-miranda-1.jpg" alt="Calacatta Miranda Quartz kitchen" loading="lazy"><span class="g-label">Calacatta Miranda</span></div>
-        <div class="g-tile" data-material="starlet"><img src="starlet-kitchen-1.jpg" alt="Starlet Quartz kitchen" loading="lazy"><span class="g-label">Starlet</span></div>
-        <div class="g-tile" data-material="sueste"><img src="calacata-sueste-1.jpg" alt="Calacatta Sueste Quartz kitchen" loading="lazy"><span class="g-label">Calacatta Sueste</span></div>
-        <div class="g-tile" data-material="miranda"><img src="calacata-miranda-2.jpg" alt="Calacatta Miranda Quartz detail" loading="lazy"><span class="g-label">Calacatta Miranda</span></div>
-        <div class="g-tile" data-material="storia"><img src="storia-1.jpg" alt="Storia Quartz bar" loading="lazy"><span class="g-label">Storia</span></div>
-        <div class="g-tile" data-material="starlet"><img src="starlet-utility-1.jpg" alt="Starlet Quartz utility room" loading="lazy"><span class="g-label">Starlet</span></div>
+        <div class="g-tile" data-material="miranda" role="img" aria-label="Calacatta Miranda Quartz kitchen" style="background-image:url('calacata-miranda-1.jpg')"><span class="g-label">Calacatta Miranda</span></div>
+        <div class="g-tile" data-material="starlet" role="img" aria-label="Starlet Quartz kitchen" style="background-image:url('starlet-kitchen-1.jpg')"><span class="g-label">Starlet</span></div>
+        <div class="g-tile" data-material="sueste" role="img" aria-label="Calacatta Sueste Quartz kitchen" style="background-image:url('calacata-sueste-1.jpg')"><span class="g-label">Calacatta Sueste</span></div>
+        <div class="g-tile" data-material="miranda" role="img" aria-label="Calacatta Miranda Quartz detail" style="background-image:url('calacata-miranda-2.jpg')"><span class="g-label">Calacatta Miranda</span></div>
+        <div class="g-tile" data-material="storia" role="img" aria-label="Storia Quartz bar" style="background-image:url('storia-1.jpg')"><span class="g-label">Storia</span></div>
+        <div class="g-tile" data-material="starlet" role="img" aria-label="Starlet Quartz utility room" style="background-image:url('starlet-utility-1.jpg')"><span class="g-label">Starlet</span></div>
       </div>
       <p class="more-note">See more of our work on <a href="https://www.facebook.com/contraststone" target="_blank" rel="noopener">Facebook</a>.</p>
     </div>
@@ -300,15 +302,15 @@
     </div>
     <div class="collections">
       <div class="collection-row">
-        <div class="c-photo"><img src="calacata-miranda-1.jpg" alt="Calacatta Miranda Quartz"></div>
+        <div class="c-photo" role="img" aria-label="Calacatta Miranda Quartz" style="background-image:url('calacata-miranda-1.jpg')"></div>
         <div class="c-info"><span class="c-eyebrow">Quartz Collection</span><h3>Calacatta Miranda</h3><p>Light marble-like veining on a cream base — quiet luxury suited to open spaces.</p></div>
       </div>
       <div class="collection-row">
-        <div class="c-photo"><img src="starlet-kitchen-1.jpg" alt="Starlet Quartz"></div>
+        <div class="c-photo" role="img" aria-label="Starlet Quartz" style="background-image:url('starlet-kitchen-1.jpg')"></div>
         <div class="c-info"><span class="c-eyebrow">Quartz Collection</span><h3>Starlet</h3><p>A deep, unified tone that makes any wood or metal detail around it stand out.</p></div>
       </div>
       <div class="collection-row">
-        <div class="c-photo"><img src="storia-1.jpg" alt="Storia Quartz"></div>
+        <div class="c-photo" role="img" aria-label="Storia Quartz" style="background-image:url('storia-1.jpg')"></div>
         <div class="c-info"><span class="c-eyebrow">Quartz Collection</span><h3>Storia</h3><p>A clean white surface with a classic feel that lives with any decor for years.</p></div>
       </div>
     </div>
@@ -371,6 +373,15 @@
   <div>© 2026 Contrast Stone · <a href="https://www.facebook.com/contraststone" target="_blank" rel="noopener">Facebook</a></div>
 </footer>
 
+<script>
+  // Image protection: block right-click save and drag on photos
+  document.addEventListener('contextmenu', function(e){
+    if (e.target.tagName === 'IMG' || e.target.closest('.g-tile,.c-photo')) e.preventDefault();
+  });
+  document.addEventListener('dragstart', function(e){
+    if (e.target.tagName === 'IMG') e.preventDefault();
+  });
+</script>
 <script>
   if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches && 'IntersectionObserver' in window) {
     var io = new IntersectionObserver(function(entries){ entries.forEach(function(e){ if (e.isIntersecting){ e.target.classList.add('is-visible'); io.unobserve(e.target); } }); }, { threshold: 0.12 });
