@@ -121,6 +121,9 @@
   .social-nav a:hover{color:var(--clay);}
   .social-nav svg{width:16px;height:16px;}
   @media(max-width:960px){.social-nav{display:none;}}
+
+                  /* Image protection */
+    img{-webkit-user-drag:none;user-drag:none;-webkit-touch-callout:none;user-select:none;-webkit-user-select:none;}
 </style>
 </head>
 <body>
@@ -216,6 +219,16 @@
   <div class="footer-logo logo-mark" role="img" aria-label="كونتراست ستون"></div>
   <div>© 2026 كونتراست ستون · <a href="https://www.facebook.com/contraststone" target="_blank" rel="noopener">فيسبوك</a></div>
 </footer>
+
+  <script>
+      // Image protection: block right-click save and drag on photos
+      document.addEventListener('contextmenu', function(e){
+            if (e.target.tagName === 'IMG') e.preventDefault();
+      });
+      document.addEventListener('dragstart', function(e){
+            if (e.target.tagName === 'IMG') e.preventDefault();
+      });
+  </script>
 
 <script>
   /* ================================================================
