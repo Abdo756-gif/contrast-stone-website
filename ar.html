@@ -126,14 +126,6 @@
   header.scrolled .social-nav a:hover{color:var(--orange);}
   @media(max-width:1050px){.social-nav{display:none;}}
 
-  .pdf-section{background:var(--bg);}
-  .pdf-toolbar{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:16px;margin-bottom:24px;}
-  .pdf-toolbar .lead{margin-bottom:0;}
-  .pdf-download{display:inline-flex;align-items:center;gap:10px;background:var(--orange);color:#fff;padding:14px 28px;border-radius:8px;font-weight:800;font-size:15px;white-space:nowrap;}
-  .pdf-download:hover{background:var(--orange-dark);}
-  .pdf-frame-wrap{border-radius:14px;overflow:hidden;box-shadow:0 4px 24px rgba(0,0,0,.08);background:#fff;border:1px solid var(--line);}
-  .pdf-frame-wrap iframe{width:100%;height:80vh;border:none;display:block;}
-  @media(max-width:700px){.pdf-frame-wrap iframe{height:60vh;}}
 </style>
 </head>
 <body>
@@ -144,7 +136,6 @@
     <li><a href="#why">ليه إحنا</a></li>
     <li><a href="#gallery">أعمالنا</a></li>
     <li><a href="catalog.html">الكاتالوج</a></li>
-    <li><a href="#pdf-catalog">PDF</a></li>
     <li><a href="#testimonials">آراء العملاء</a></li>
     <li><a href="#contact">تواصل</a></li>
   </ul><div class="social-nav">
@@ -201,21 +192,6 @@
   </div>
 </section>
 
-<section class="section pdf-section" id="pdf-catalog" style="padding-top:0;">
-  <div class="container">
-    <div class="pdf-toolbar">
-      <div>
-        <div class="kicker">الكاتالوج الكامل</div>
-        <h2 style="margin-bottom:8px;">تصفح أو حمّل كاتالوج الكوارتز كامل</h2>
-        <p class="lead" style="margin-bottom:0;">كل المجموعات والألوان في ملف واحد - اتصفحه هنا أو حمّل نسختك.</p>
-      </div>
-      <a class="pdf-download" href="quartz-catalog.pdf" download>⬇ تحميل الكاتالوج (PDF)</a>
-    </div>
-    <div class="pdf-frame-wrap">
-      <iframe src="quartz-catalog.pdf" title="كاتالوج كونتراست ستون للكوارتز"></iframe>
-    </div>
-  </div>
-</section>
 
 <section class="section" style="background:#fff;">
   <div class="container">
