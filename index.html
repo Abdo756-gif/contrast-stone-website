@@ -90,6 +90,18 @@
   .gallery-strip .g .cap{position:absolute;bottom:0;left:0;right:0;padding:14px 16px;background:linear-gradient(to top,rgba(38,34,28,.8),transparent);color:#fff;font-size:13px;font-weight:700;opacity:0;transition:.3s;}
   .gallery-strip .g:hover .cap{opacity:1;}
   .gallery-strip .g:hover{background-size:112%;}
+    .gallery-strip .g{cursor:pointer;}
+    .g-count{position:absolute; top:10px; right:10px; background:rgba(38,34,28,.72); color:#fff; font-size:11px; font-weight:700; padding:4px 10px; border-radius:20px;}
+
+    .g-lightbox{position:fixed; inset:0; z-index:300; background:rgba(15,13,10,.94); display:none; align-items:center; justify-content:center;}
+    .g-lightbox.open{display:flex;}
+    .g-lightbox-img{max-width:88vw; max-height:80vh; object-fit:contain; -webkit-user-drag:none; user-drag:none; pointer-events:none;}
+    .g-lightbox-close{position:absolute; top:22px; right:26px; width:42px; height:42px; background:none; border:1px solid rgba(255,255,255,.35); color:#fff; cursor:pointer; font-size:1.1rem;}
+    .g-lightbox-nav{position:absolute; top:50%; transform:translateY(-50%); width:46px; height:46px; background:rgba(255,255,255,.08); border:1px solid rgba(255,255,255,.3); color:#fff; cursor:pointer; font-size:1.4rem; display:flex; align-items:center; justify-content:center;}
+    .g-lightbox-prev{left:20px;}
+    .g-lightbox-next{right:20px;}
+    .g-lightbox-count{position:absolute; bottom:26px; left:50%; transform:translateX(-50%); color:#B5AC9B; font-size:.85rem;}
+    @media (max-width:700px){.g-lightbox-nav{width:38px; height:38px;} .g-lightbox-close{top:14px; right:14px;}}
 
   /* Image protection */
   img{-webkit-user-drag:none;user-drag:none;-webkit-touch-callout:none;user-select:none;-webkit-user-select:none;}
@@ -215,6 +227,8 @@
     <h2>Real Work, Real Clients</h2>
     <p class="lead">Snapshots from real Contrast Stone installations.</p>
     <div class="gallery-strip">
+            <div class="g" data-album="unique-calacatta-gold" role="img" aria-label="Unique Calacata Gold" style="background-image:url('unique-calacatta-gold-1.jpg')"><div class="cap">Unique Calacata Gold</div><span class="g-count">4 photos</span>span></div>div>
+            <div class="g" data-album="starlet-album" role="img" aria-label="Starlet" style="background-image:url('starlet-album-1.jpg')"><div class="cap">Starlet</div>div><span class="g-count">5 photos</span>span></div>div>
       <div class="g" role="img" aria-label="Alba Via" style="background-image:url('alba-via.jpg')"><div class="cap">Alba Via</div></div>
       <div class="g" role="img" aria-label="Calacata Miranda" style="background-image:url('calacata-miranda-1.jpg')"><div class="cap">Calacata Miranda</div></div>
       <div class="g" role="img" aria-label="Calacata Sueste" style="background-image:url('calacata-sueste-1.jpg')"><div class="cap">Calacata Sueste</div></div>
@@ -271,6 +285,55 @@
     <path d="M12.13 9.86c-.243-.54-.5-.552-.732-.561-.19-.008-.407-.007-.625-.007-.218 0-.572.082-.871.408-.3.327-1.145 1.12-1.145 2.73 0 1.611 1.172 3.167 1.336 3.386.164.218 2.27 3.638 5.607 4.953 2.773 1.093 3.338.876 3.94.822.6-.055 1.936-.79 2.208-1.552.273-.762.273-1.416.191-1.552-.082-.136-.3-.218-.627-.382-.328-.164-1.936-.955-2.236-1.064-.3-.11-.518-.164-.736.164-.218.327-.845 1.063-1.036 1.28-.19.219-.382.246-.71.083-.328-.164-1.383-.51-2.635-1.626-.974-.868-1.632-1.94-1.822-2.267-.19-.328-.02-.505.144-.668.148-.147.328-.383.491-.574.164-.19.219-.328.328-.546.11-.219.055-.41-.027-.574-.082-.164-.717-1.786-.996-2.446Z" fill="#fff"/>
   </svg>
 </a>
+
+      <div class="g-lightbox" id="gLightbox">
+          <button class="g-lightbox-close" id="gLightboxClose" aria-label="Close">&#10005;</button>button>
+          <button class="g-lightbox-nav g-lightbox-prev" id="gLightboxPrev" aria-label="Previous">&#8249;</button>button>
+          <img class="g-lightbox-img" id="gLightboxImg" src="" alt="">
+          <button class="g-lightbox-nav g-lightbox-next" id="gLightboxNext" aria-label="Next">&#8250;</button>button>
+          <span class="g-lightbox-count" id="gLightboxCount"></span>span>
+      </div>div>
+
+      <script>
+          // Photo albums with lightbox
+          (function(){
+                var ALBUMS = {
+                        'unique-calacatta-gold': ['unique-calacatta-gold-1.jpg','unique-calacatta-gold-2.jpg','unique-calacatta-gold-3.jpg','unique-calacatta-gold-4.jpg'],
+                        'starlet-album': ['starlet-album-1.jpg','starlet-album-2.jpg','starlet-album-3.jpg','starlet-album-4.jpg','starlet-album-5.jpg']
+                };
+                var lb = document.getElementById('gLightbox');
+                var lbImg = document.getElementById('gLightboxImg');
+                var lbCount = document.getElementById('gLightboxCount');
+                var curAlbum = null, curIndex = 0;
+                function render(){
+                        lbImg.src = curAlbum[curIndex];
+                        lbCount.textContent = (curIndex+1) + ' / ' + curAlbum.length;
+                }
+                function openAlbum(key){
+                        curAlbum = ALBUMS[key];
+                        if (!curAlbum) return;
+                                curIndex = 0;
+                        render();
+                        lb.classList.add('open');
+                }
+                function closeLb(){ lb.classList.remove('open'); }
+                function next(){ curIndex = (curIndex+1) % curAlbum.length; render(); }
+                function prev(){ curIndex = (curIndex-1+curAlbum.length) % curAlbum.length; render(); }
+                document.querySelectorAll('[data-album]').forEach(function(el){
+                        el.addEventListener('click', function(){ openAlbum(el.getAttribute('data-album')); });
+                });
+                document.getElementById('gLightboxClose').addEventListener('click', closeLb);
+                document.getElementById('gLightboxNext').addEventListener('click', next);
+                document.getElementById('gLightboxPrev').addEventListener('click', prev);
+                lb.addEventListener('click', function(e){ if (e.target === lb) closeLb(); });
+                document.addEventListener('keydown', function(e){
+                        if (!lb.classList.contains('open')) return;
+                                if (e.key === 'Escape') closeLb();
+                                        if (e.key === 'ArrowRight') next();
+                                                if (e.key === 'ArrowLeft') prev();
+                });
+          })();
+      </script>
 
 <script>
   // Image protection: block right-click save and drag on photos
