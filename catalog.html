@@ -452,17 +452,24 @@
 
   var tabs = document.querySelectorAll('.origin-tab');
   var groups = document.querySelectorAll('.origin-group');
+  function selectOrigin(origin){
+    tabs.forEach(function(t){ t.classList.toggle('active', t.getAttribute('data-origin') === origin); });
+    groups.forEach(function(g){
+      if (origin === 'all' || g.getAttribute('data-origin') === origin) g.classList.remove('hide');
+      else g.classList.add('hide');
+    });
+  }
   tabs.forEach(function(tab){
     tab.addEventListener('click', function(){
-      tabs.forEach(function(t){ t.classList.remove('active'); });
-      tab.classList.add('active');
-      var origin = tab.getAttribute('data-origin');
-      groups.forEach(function(g){
-        if (origin === 'all' || g.getAttribute('data-origin') === origin) g.classList.remove('hide');
-        else g.classList.add('hide');
-      });
+      selectOrigin(tab.getAttribute('data-origin'));
     });
   });
+  var urlOrigin = new URLSearchParams(window.location.search).get('origin');
+  if (urlOrigin && document.querySelector('.origin-tab[data-origin="' + urlOrigin + '"]')) {
+    selectOrigin(urlOrigin);
+    var targetTabs = document.getElementById('originTabs');
+    if (targetTabs) { setTimeout(function(){ targetTabs.scrollIntoView({behavior:'instant', block:'start'}); }, 0); }
+  }
 
   var navToggle = document.getElementById('navToggle');
   var mobileMenu = document.getElementById('mobileMenu');
