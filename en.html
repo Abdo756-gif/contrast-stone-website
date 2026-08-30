@@ -93,6 +93,18 @@
   .g-tile.hide{display:none;}
   .g-tile:hover{background-size:112%;}
   .g-tile .g-label{position:absolute; inset:auto 0 0 0; padding:18px 16px; background:linear-gradient(0deg, rgba(24,20,16,.85), transparent); color:var(--cream); font-size:.8rem; font-weight:600; letter-spacing:.03em;}
+  .g-tile{cursor:pointer;}
+  .g-count{position:absolute; top:12px; right:12px; background:rgba(24,20,16,.72); color:var(--cream); font-size:.72rem; font-weight:700; padding:4px 11px; border-radius:20px; letter-spacing:.02em;}
+
+  .g-lightbox{position:fixed; inset:0; z-index:300; background:rgba(10,8,6,.94); display:none; align-items:center; justify-content:center;}
+  .g-lightbox.open{display:flex;}
+  .g-lightbox-img{max-width:88vw; max-height:80vh; object-fit:contain; -webkit-user-drag:none; user-drag:none; pointer-events:none;}
+  .g-lightbox-close{position:absolute; top:22px; right:26px; width:42px; height:42px; background:none; border:1px solid rgba(239,230,216,.35); color:var(--cream); cursor:pointer; font-size:1.1rem;}
+  .g-lightbox-nav{position:absolute; top:50%; transform:translateY(-50%); width:46px; height:46px; background:rgba(239,230,216,.08); border:1px solid rgba(239,230,216,.3); color:var(--cream); cursor:pointer; font-size:1.4rem; display:flex; align-items:center; justify-content:center;}
+  .g-lightbox-prev{left:20px;}
+  .g-lightbox-next{right:20px;}
+  .g-lightbox-count{position:absolute; bottom:26px; left:50%; transform:translateX(-50%); color:var(--taupe); font-size:.85rem; letter-spacing:.03em;}
+  @media (max-width:700px){.g-lightbox-nav{width:38px; height:38px;} .g-lightbox-close{top:14px; right:14px;}}
   .more-note{margin-top:36px; color:var(--taupe); font-size:.94rem;}
   .more-note a{color:var(--clay-bright); font-weight:700; border-bottom:1px solid currentColor;}
 
@@ -253,6 +265,8 @@
         <button class="filter-btn" data-filter="starlet">Starlet</button>
       </div>
       <div class="g-masonry" id="galleryGrid">
+        <div class="g-tile" data-album="unique-calacatta-gold" role="img" aria-label="Unique Calacata Gold album" style="background-image:url('unique-calacatta-gold-1.jpg')"><span class="g-label">Unique Calacata Gold</span><span class="g-count">4 photos</span></div>
+        <div class="g-tile" data-album="starlet-album" role="img" aria-label="Starlet album" style="background-image:url('starlet-album-1.jpg')"><span class="g-label">Starlet</span><span class="g-count">5 photos</span></div>
         <div class="g-tile" data-material="miranda" role="img" aria-label="Calacatta Miranda Quartz kitchen" style="background-image:url('calacata-miranda-1.jpg')"><span class="g-label">Calacatta Miranda</span></div>
         <div class="g-tile" data-material="starlet" role="img" aria-label="Starlet Quartz kitchen" style="background-image:url('starlet-kitchen-1.jpg')"><span class="g-label">Starlet</span></div>
         <div class="g-tile" data-material="sueste" role="img" aria-label="Calacatta Sueste Quartz kitchen" style="background-image:url('calacata-sueste-1.jpg')"><span class="g-label">Calacatta Sueste</span></div>
@@ -372,6 +386,55 @@
   <div class="footer-logo logo-mark" role="img" aria-label="Contrast Stone"></div>
   <div>© 2026 Contrast Stone · <a href="https://www.facebook.com/contraststone" target="_blank" rel="noopener">Facebook</a></div>
 </footer>
+
+<div class="g-lightbox" id="gLightbox">
+  <button class="g-lightbox-close" id="gLightboxClose" aria-label="Close">&#10005;</button>
+  <button class="g-lightbox-nav g-lightbox-prev" id="gLightboxPrev" aria-label="Previous">&#8249;</button>
+  <img class="g-lightbox-img" id="gLightboxImg" src="" alt="">
+  <button class="g-lightbox-nav g-lightbox-next" id="gLightboxNext" aria-label="Next">&#8250;</button>
+  <span class="g-lightbox-count" id="gLightboxCount"></span>
+</div>
+
+<script>
+  // Photo albums with lightbox
+  (function(){
+    var ALBUMS = {
+      'unique-calacatta-gold': ['unique-calacatta-gold-1.jpg','unique-calacatta-gold-2.jpg','unique-calacatta-gold-3.jpg','unique-calacatta-gold-4.jpg'],
+      'starlet-album': ['starlet-album-1.jpg','starlet-album-2.jpg','starlet-album-3.jpg','starlet-album-4.jpg','starlet-album-5.jpg']
+    };
+    var lb = document.getElementById('gLightbox');
+    var lbImg = document.getElementById('gLightboxImg');
+    var lbCount = document.getElementById('gLightboxCount');
+    var curAlbum = null, curIndex = 0;
+    function render(){
+      lbImg.src = curAlbum[curIndex];
+      lbCount.textContent = (curIndex+1) + ' / ' + curAlbum.length;
+    }
+    function openAlbum(key){
+      curAlbum = ALBUMS[key];
+      if (!curAlbum) return;
+      curIndex = 0;
+      render();
+      lb.classList.add('open');
+    }
+    function closeLb(){ lb.classList.remove('open'); }
+    function next(){ curIndex = (curIndex+1) % curAlbum.length; render(); }
+    function prev(){ curIndex = (curIndex-1+curAlbum.length) % curAlbum.length; render(); }
+    document.querySelectorAll('[data-album]').forEach(function(el){
+      el.addEventListener('click', function(){ openAlbum(el.getAttribute('data-album')); });
+    });
+    document.getElementById('gLightboxClose').addEventListener('click', closeLb);
+    document.getElementById('gLightboxNext').addEventListener('click', next);
+    document.getElementById('gLightboxPrev').addEventListener('click', prev);
+    lb.addEventListener('click', function(e){ if (e.target === lb) closeLb(); });
+    document.addEventListener('keydown', function(e){
+      if (!lb.classList.contains('open')) return;
+      if (e.key === 'Escape') closeLb();
+      if (e.key === 'ArrowRight') next();
+      if (e.key === 'ArrowLeft') prev();
+    });
+  })();
+</script>
 
 <script>
   // Image protection: block right-click save and drag on photos
