@@ -11,6 +11,7 @@
 <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
 <link rel="icon" type="image/png" href="favicon-32.png">
 <link rel="apple-touch-icon" href="favicon-180.png">
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <style>
   :root{
     --stone:#1F1B16; --charcoal:#FFFFFF; --charcoal-2:#F3EDE0; --clay:#B8804A; --clay-bright:#D9B98A; --clay-deep:#8F6238;
@@ -106,6 +107,9 @@
   .mat-meta b{color:var(--clay-bright); font-weight:600;}
   .mat-cta{margin-top:auto; padding-top:10px; display:inline-flex; align-items:center; gap:8px; font-size:.82rem; font-weight:700; color:var(--clay); border-top:1px solid var(--line); padding-top:14px;}
   .mat-cta svg{width:16px; height:16px;}
+
+  .stock-badge{position:absolute; top:12px; inset-inline-start:12px; z-index:3; background:var(--stone); color:#fff; font-size:.72rem; font-weight:700; padding:6px 12px; border-radius:20px; letter-spacing:.02em;}
+  .mat-card.out-of-stock .mat-photo img{filter:grayscale(55%); opacity:.55;}
 
   .empty-note{border:1px dashed var(--line-dark); padding:36px 28px; text-align:center; color:var(--taupe); font-size:.94rem;}
   .empty-note b{display:block; color:var(--stone); font-family:var(--disp); font-size:1.1rem; margin-bottom:8px; font-weight:700;}
@@ -350,6 +354,7 @@
   function renderCard(item){
     var imgs = item.images && item.images.length ? item.images : (item.image ? [item.image] : []);
     var cardId = 'mc' + (cardCounter++);
+    var slug = imgs.length ? imgs[0].replace(/\.[^.]+$/, '') : '';
     var photo = '';
     if (imgs.length){
       var slides = imgs.map(function(src, i){
@@ -363,7 +368,7 @@
       photo = '<div class="mat-photo" id="' + cardId + '" data-count="' + imgs.length + '">' + slides + nav + '</div>';
     }
     return '' +
-      '<div class="mat-card">' +
+      '<div class="mat-card" data-slug="' + slug + '">' +
         photo +
         '<div class="mat-body">' +
           '<div class="mat-name">' + item.name + '</div>' +
@@ -392,6 +397,31 @@
 
   var root = document.getElementById('catalogRoot');
   root.innerHTML = Object.keys(CATALOG).map(function(key){ return renderGroup(key, CATALOG[key]); }).join('');
+
+  /* mark out-of-stock materials (managed from /admin.html) */
+  (function applyStockStatus(){
+    var SUPABASE_URL = "https://kvqmoygvhiatvzzhqqhs.supabase.co";
+    var SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imt2cW1veWd2aGlhdHZ6emhxcWhzIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODQ5ODM3OTAsImV4cCI6MjEwMDU1OTc5MH0.EegJd5yKKR1sfv4ly8prjT8prn18U2jieSIBXldO-qE";
+    if (!window.supabase || SUPABASE_URL.indexOf('REPLACE') === 0) return;
+    var sb = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+    sb.from('stock_status').select('slug,in_stock').then(function(res){
+      if (res.error || !res.data) return;
+      res.data.forEach(function(row){
+        if (row.in_stock === false) {
+          var card = root.querySelector('.mat-card[data-slug="' + row.slug + '"]');
+          if (!card) return;
+          card.classList.add('out-of-stock');
+          var photo = card.querySelector('.mat-photo');
+          if (photo) {
+            var badge = document.createElement('span');
+            badge.className = 'stock-badge';
+            badge.textContent = 'غير متوفر حالياً';
+            photo.appendChild(badge);
+          }
+        }
+      });
+    }).catch(function(){});
+  })();
 
   root.addEventListener('click', function(e){
     var navBtn = e.target.closest('[data-nav]');

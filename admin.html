@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>لوحة تحكم المخزون | كونتراست ستون</title>
+<meta name="robots" content="noindex, nofollow">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+<link rel="icon" type="image/png" href="favicon-32.png">
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<style>
+  :root{
+    --stone:#1F1B16; --charcoal:#FFFFFF; --charcoal-2:#F3EDE0; --clay:#B8804A; --clay-bright:#D9B98A; --clay-deep:#8F6238;
+    --cream:#FAF7F0; --taupe:#7A7264; --line:rgba(184,128,74,.18); --good:#4C8B5A; --bad:#B84A4A;
+    --disp:'Cairo',sans-serif; --wrap:1100px;
+  }
+  *{box-sizing:border-box; margin:0; padding:0;}
+  body{font-family:var(--disp); background:var(--cream); color:var(--stone); line-height:1.6; min-height:100vh;}
+  .wrap{max-width:var(--wrap); margin:0 auto; padding:32px 24px 80px;}
+  header{display:flex; align-items:center; justify-content:space-between; margin-bottom:28px; flex-wrap:wrap; gap:14px;}
+  header h1{font-size:1.4rem; font-weight:800;}
+  header .sub{color:var(--taupe); font-size:.85rem; margin-top:4px;}
+  .btn{cursor:pointer; border:1px solid var(--line); background:#fff; color:var(--stone); font-family:var(--disp); font-weight:700; font-size:.85rem; padding:10px 18px; border-radius:8px;}
+  .btn:hover{border-color:var(--clay);}
+  .btn.primary{background:var(--clay); color:#fff; border-color:var(--clay);}
+  .btn.primary:hover{background:var(--clay-deep);}
+
+  /* login */
+  #loginScreen{max-width:380px; margin:80px auto; background:#fff; border:1px solid var(--line); border-radius:14px; padding:36px 30px; box-shadow:0 4px 24px rgba(0,0,0,.06);}
+  #loginScreen h1{font-size:1.3rem; margin-bottom:6px;}
+  #loginScreen p{color:var(--taupe); font-size:.85rem; margin-bottom:22px;}
+  .field{margin-bottom:14px;}
+  .field label{display:block; font-size:.8rem; font-weight:700; margin-bottom:6px; color:var(--taupe);}
+  .field input{width:100%; padding:11px 13px; border:1px solid var(--line); border-radius:8px; font-family:var(--disp); font-size:.95rem; background:var(--cream);}
+  .field input:focus{outline:2px solid var(--clay-bright); border-color:var(--clay);}
+  #loginBtn{width:100%; margin-top:8px; padding:12px;}
+  #loginError{color:var(--bad); font-size:.82rem; margin-top:12px; display:none;}
+
+  /* app */
+  #appScreen{display:none;}
+  .toolbar{display:flex; gap:10px; flex-wrap:wrap; margin-bottom:24px; align-items:center;}
+  .toolbar input[type="search"]{flex:1; min-width:200px; padding:10px 14px; border:1px solid var(--line); border-radius:8px; font-family:var(--disp); background:#fff;}
+  .origin-filter{display:flex; gap:8px; flex-wrap:wrap;}
+  .origin-filter button{cursor:pointer; background:#fff; border:1px solid var(--line); border-radius:20px; padding:8px 16px; font-size:.82rem; font-weight:700; color:var(--stone); font-family:var(--disp);}
+  .origin-filter button.active{background:var(--stone); color:#fff; border-color:var(--stone);}
+
+  .status-bar{font-size:.82rem; color:var(--taupe); margin-bottom:16px;}
+  .status-bar b{color:var(--good);}
+
+  .origin-block{margin-bottom:32px;}
+  .origin-block h2{font-size:1.05rem; font-weight:800; margin-bottom:12px; padding-bottom:8px; border-bottom:2px solid var(--stone);}
+  .mat-list{display:grid; grid-template-columns:repeat(auto-fill, minmax(280px,1fr)); gap:12px;}
+  .mat-row{display:flex; align-items:center; gap:12px; background:#fff; border:1px solid var(--line); border-radius:10px; padding:10px 14px;}
+  .mat-row img{width:48px; height:48px; object-fit:cover; border-radius:8px; flex-shrink:0; background:var(--charcoal-2);}
+  .mat-row .name{flex:1; font-size:.9rem; font-weight:700;}
+  .mat-row .state{font-size:.72rem; font-weight:700; color:var(--taupe); min-width:70px; text-align:center;}
+  .mat-row.out .state{color:var(--bad);}
+  .mat-row.in .state{color:var(--good);}
+
+  /* toggle switch */
+  .switch{position:relative; display:inline-block; width:46px; height:26px; flex-shrink:0;}
+  .switch input{opacity:0; width:0; height:0;}
+  .slider{position:absolute; cursor:pointer; inset:0; background:#d8cfc0; transition:.2s; border-radius:26px;}
+  .slider:before{position:absolute; content:""; height:20px; width:20px; right:3px; bottom:3px; background:#fff; transition:.2s; border-radius:50%;}
+  input:checked + .slider{background:var(--good);}
+  input:checked + .slider:before{transform:translateX(-20px);}
+  .mat-row.saving{opacity:.5;}
+
+  #loadingNote, #emptyNote{color:var(--taupe); font-size:.9rem; padding:20px 0;}
+</style>
+</head>
+<body>
+
+<div id="loginScreen">
+  <h1>لوحة تحكم المخزون</h1>
+  <p>سجّل الدخول بحساب الأدمن لتغيير حالة توفر الخامات في الموقع.</p>
+  <div class="field">
+    <label>البريد الإلكتروني</label>
+    <input type="email" id="loginEmail" autocomplete="username">
+  </div>
+  <div class="field">
+    <label>كلمة المرور</label>
+    <input type="password" id="loginPassword" autocomplete="current-password">
+  </div>
+  <button class="btn primary" id="loginBtn">تسجيل الدخول</button>
+  <div id="loginError">خطأ في البريد الإلكتروني أو كلمة المرور</div>
+</div>
+
+<div id="appScreen">
+  <div class="wrap">
+    <header>
+      <div>
+        <h1>حالة المخزون</h1>
+        <div class="sub">فعّل أو أوقف توفر أي خامة، والتغيير يظهر في الموقع فورًا</div>
+      </div>
+      <button class="btn" id="logoutBtn">تسجيل الخروج</button>
+    </header>
+
+    <div class="toolbar">
+      <input type="search" id="searchBox" placeholder="ابحث باسم الخامة...">
+    </div>
+    <div class="origin-filter" id="originFilter"></div>
+    <div class="status-bar" id="statusBar"></div>
+
+    <div id="loadingNote">جاري تحميل الخامات...</div>
+    <div id="listRoot"></div>
+  </div>
+</div>
+
+<script>
+  /* ============ EDIT THESE TWO LINES ============ */
+  var SUPABASE_URL = "https://kvqmoygvhiatvzzhqqhs.supabase.co";
+  var SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imt2cW1veWd2aGlhdHZ6emhxcWhzIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODQ5ODM3OTAsImV4cCI6MjEwMDU1OTc5MH0.EegJd5yKKR1sfv4ly8prjT8prn18U2jieSIBXldO-qE";
+  /* ================================================ */
+
+  var sb = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+  /* Same materials as catalog.html / catalog-en.html, kept in sync manually when the catalog changes */
+  var MATERIALS = [{"slug": "raphael-madonna-material", "name": "رافايل مادونا", "origin": "indian", "image": "raphael-madonna-material.jpg"}, {"slug": "ash-grey-material", "name": "آش جراي", "origin": "indian", "image": "ash-grey-material.jpg"}, {"slug": "bastille-black-material", "name": "باستيل بلاك", "origin": "indian", "image": "bastille-black-material.jpg"}, {"slug": "calacatta-amber-material", "name": "كلاكاتا امبر", "origin": "indian", "image": "calacatta-amber-material.jpg"}, {"slug": "calacatta-nuovo-material", "name": "كلاكاتا نوفو", "origin": "indian", "image": "calacatta-nuovo-material.jpg"}, {"slug": "carrara-white-material", "name": "كرارا وايت", "origin": "indian", "image": "carrara-white-material.jpg"}, {"slug": "cement-grey-material", "name": "سيمنت جراي", "origin": "indian", "image": "cement-grey-material.jpg"}, {"slug": "empire-grey-material", "name": "إمباير جراي", "origin": "indian", "image": "empire-grey-material.jpg"}, {"slug": "kensington-white-material", "name": "كينسينجتون وايت", "origin": "indian", "image": "kensington-white-material.jpg"}, {"slug": "laza-grey-material", "name": "لازا جراي", "origin": "indian", "image": "laza-grey-material.jpg"}, {"slug": "leon-gold-material", "name": "ليون جولد", "origin": "indian", "image": "leon-gold-material.jpg"}, {"slug": "marmo-bernini-gold-material", "name": "مارمو برنيني جولد", "origin": "indian", "image": "marmo-bernini-gold-material.jpg"}, {"slug": "marmo-bernini-material", "name": "مارمو برنيني", "origin": "indian", "image": "marmo-bernini-material.jpg"}, {"slug": "marmo-rinaldi-material", "name": "مارمو رينالدي", "origin": "indian", "image": "marmo-rinaldi-material.jpg"}, {"slug": "matisse-white-material", "name": "ماتيس وايت", "origin": "indian", "image": "matisse-white-material.jpg"}, {"slug": "minta-material", "name": "مينتا", "origin": "indian", "image": "minta-material.jpg"}, {"slug": "palais-white-material", "name": "باليه وايت", "origin": "indian", "image": "palais-white-material.jpg"}, {"slug": "pantheon-beige-material", "name": "بانثيون بيج", "origin": "indian", "image": "pantheon-beige-material.jpg"}, {"slug": "profundo-black-material", "name": "بروفوندو بلاك", "origin": "indian", "image": "profundo-black-material.jpg"}, {"slug": "raphael-ultimo-material", "name": "رافايل ألتيمو", "origin": "indian", "image": "raphael-ultimo-material.jpg"}, {"slug": "soho-white-material", "name": "سوهو وايت", "origin": "indian", "image": "soho-white-material.jpg"}, {"slug": "vinci-eterno-material", "name": "فينشي إيترنو", "origin": "indian", "image": "vinci-eterno-material.jpg"}, {"slug": "winter-white-material", "name": "وينتر وايت", "origin": "indian", "image": "winter-white-material.jpg"}, {"slug": "raphael-primo-material", "name": "رافايل بريمو", "origin": "indian", "image": "raphael-primo-material.jpg"}, {"slug": "alba-via", "name": "ألبا فيا", "origin": "turkish", "image": "alba-via.jpg"}, {"slug": "calacatta-miranda-material", "name": "كلاكاتا ميرندا", "origin": "turkish", "image": "calacatta-miranda-material.jpg"}, {"slug": "calacatta-sueste-material", "name": "كلاكاتا سيوسيت", "origin": "turkish", "image": "calacatta-sueste-material.jpg"}, {"slug": "dreamy-material", "name": "دريمي", "origin": "turkish", "image": "dreamy-material.jpg"}, {"slug": "elysee-material", "name": "ايلسي", "origin": "turkish", "image": "elysee-material.jpg"}, {"slug": "hielo-material", "name": "هيلو", "origin": "turkish", "image": "hielo-material.jpg"}, {"slug": "idyma-material", "name": "ايديما", "origin": "turkish", "image": "idyma-material.jpg"}, {"slug": "magnificent-material", "name": "ماجنيفسنت", "origin": "turkish", "image": "magnificent-material.jpg"}, {"slug": "majestic-brown-material", "name": "ماجيستك براون", "origin": "turkish", "image": "majestic-brown-material.jpg"}, {"slug": "narcissus-material", "name": "نارسيس", "origin": "turkish", "image": "narcissus-material.jpg"}, {"slug": "regina-material", "name": "ريجينا", "origin": "turkish", "image": "regina-material.jpg"}, {"slug": "regulus-material", "name": "ريجيليس", "origin": "turkish", "image": "regulus-material.jpg"}, {"slug": "snow-flake-material", "name": "سنو فليك", "origin": "turkish", "image": "snow-flake-material.jpg"}, {"slug": "starlet-material", "name": "ستارليت", "origin": "turkish", "image": "starlet-material.jpg"}, {"slug": "storia-material", "name": "ستوريا", "origin": "turkish", "image": "storia-material.jpg"}, {"slug": "planet-halley-material", "name": "بلانت هالي", "origin": "german", "image": "planet-halley-material.jpg"}, {"slug": "planet-interstellar-cloud-material", "name": "بلانت انترستيلر كلاود", "origin": "german", "image": "planet-interstellar-cloud-material.png"}, {"slug": "planet-mercury-material", "name": "بلانت ميرسي", "origin": "german", "image": "planet-mercury-material.jpg"}, {"slug": "planet-mars-material", "name": "بلانت مارس", "origin": "german", "image": "planet-mars-material.jpg"}, {"slug": "planet-pluto-material", "name": "بلانت بلوتو", "origin": "german", "image": "planet-pluto-material.jpg"}, {"slug": "planet-jupiter-material", "name": "بلانت جوبيتور", "origin": "german", "image": "planet-jupiter-material.jpg"}, {"slug": "planet-tempel-material", "name": "بلانت تيمبل", "origin": "german", "image": "planet-tempel-material.jpg"}, {"slug": "unique-calacatta-black-material", "name": "يونيك كلاكاتا بلاك", "origin": "spanish", "image": "unique-calacatta-black-material.jpg"}, {"slug": "unique-calacatta-gold-material", "name": "يونيك كلاكاتا جولد", "origin": "spanish", "image": "unique-calacatta-gold-material.jpg"}, {"slug": "unique-carrara-material", "name": "يونيك كرارا", "origin": "spanish", "image": "unique-carrara-material.jpg"}, {"slug": "unique-macchia-vecchia-material", "name": "يونيك ماكيا فيكيا", "origin": "spanish", "image": "unique-macchia-vecchia-material.jpg"}, {"slug": "genesis-cobweb-material", "name": "كوبويب", "origin": "spanish", "image": "genesis-cobweb-material.jpg"}, {"slug": "genesis-ice-max-black-material", "name": "آيس ماكس بلاك", "origin": "spanish", "image": "genesis-ice-max-black-material.jpg"}, {"slug": "genesis-ice-max-pure-material", "name": "آيس ماكس بيور", "origin": "spanish", "image": "genesis-ice-max-pure-material.jpg"}, {"slug": "genesis-ice-white-material", "name": "آيس وايت", "origin": "spanish", "image": "genesis-ice-white-material.jpg"}, {"slug": "genesis-nebulous-gold-material", "name": "نيبيولاس جولد", "origin": "spanish", "image": "genesis-nebulous-gold-material.jpg"}, {"slug": "obsidiana-volcano-cloud-material", "name": "فولكانو كلاود", "origin": "spanish", "image": "obsidiana-volcano-cloud-material.jpg"}, {"slug": "obsidiana-volcano-dark-material", "name": "فولكانو دارك", "origin": "spanish", "image": "obsidiana-volcano-dark-material.jpg"}, {"slug": "obsidiana-volcano-fog-material", "name": "فولكانو فوج", "origin": "spanish", "image": "obsidiana-volcano-fog-material.jpg"}, {"slug": "obsidiana-volcano-light-material", "name": "فولكانو لايت", "origin": "spanish", "image": "obsidiana-volcano-light-material.jpg"}, {"slug": "obsidiana-volcano-pearl-material", "name": "فولكانو بيرل", "origin": "spanish", "image": "obsidiana-volcano-pearl-material.jpg"}, {"slug": "unique-arabescato-material", "name": "يونيك أرابيسكاتو", "origin": "spanish", "image": "unique-arabescato-material.jpg"}, {"slug": "unique-argento-material", "name": "يونيك أرجينتو", "origin": "spanish", "image": "unique-argento-material.jpg"}, {"slug": "unique-bianco-material", "name": "يونيك بيانكو", "origin": "spanish", "image": "unique-bianco-material.jpg"}, {"slug": "unique-calacatta-material", "name": "يونيك كلاكاتا", "origin": "spanish", "image": "unique-calacatta-material.jpg"}, {"slug": "unique-portoro-material", "name": "يونيك بورتورو", "origin": "spanish", "image": "unique-portoro-material.jpg"}, {"slug": "unique-venatino-material", "name": "يونيك فيناتينو", "origin": "spanish", "image": "unique-venatino-material.jpg"}, {"slug": "unique-marquina-material", "name": "يونيك ماركينا", "origin": "spanish", "image": "unique-marquina-material.jpg"}, {"slug": "unique-pietra-material", "name": "يونيك بيترا", "origin": "spanish", "image": "unique-pietra-material.jpg"}];
+
+  var ORIGIN_LABELS = { all: "الكل", indian: "هندي", turkish: "تركي", german: "ألماني", spanish: "إسباني" };
+  var stockMap = {}; // slug -> in_stock boolean
+  var currentOrigin = "all";
+  var currentSearch = "";
+
+  /* ---------- auth ---------- */
+  var loginScreen = document.getElementById('loginScreen');
+  var appScreen = document.getElementById('appScreen');
+  var loginError = document.getElementById('loginError');
+
+  function showApp(){
+    loginScreen.style.display = 'none';
+    appScreen.style.display = 'block';
+    loadStock();
+  }
+  function showLogin(){
+    loginScreen.style.display = 'block';
+    appScreen.style.display = 'none';
+  }
+
+  sb.auth.getSession().then(function(res){
+    if (res.data && res.data.session) showApp(); else showLogin();
+  });
+
+  document.getElementById('loginBtn').addEventListener('click', function(){
+    var email = document.getElementById('loginEmail').value.trim();
+    var password = document.getElementById('loginPassword').value;
+    loginError.style.display = 'none';
+    sb.auth.signInWithPassword({ email: email, password: password }).then(function(res){
+      if (res.error) { loginError.style.display = 'block'; return; }
+      showApp();
+    });
+  });
+  document.getElementById('loginPassword').addEventListener('keydown', function(e){
+    if (e.key === 'Enter') document.getElementById('loginBtn').click();
+  });
+
+  document.getElementById('logoutBtn').addEventListener('click', function(){
+    sb.auth.signOut().then(function(){ showLogin(); });
+  });
+
+  /* ---------- data ---------- */
+  function loadStock(){
+    sb.from('stock_status').select('slug,in_stock').then(function(res){
+      stockMap = {};
+      (res.data || []).forEach(function(row){ stockMap[row.slug] = row.in_stock; });
+      document.getElementById('loadingNote').style.display = 'none';
+      renderFilters();
+      render();
+    });
+  }
+
+  function isInStock(slug){
+    return stockMap.hasOwnProperty(slug) ? stockMap[slug] !== false : true;
+  }
+
+  function setStock(slug, value, rowEl){
+    rowEl.classList.add('saving');
+    sb.from('stock_status').upsert({ slug: slug, in_stock: value, updated_at: new Date().toISOString() }, { onConflict: 'slug' }).then(function(res){
+      rowEl.classList.remove('saving');
+      if (res.error) { alert('حصل خطأ أثناء الحفظ، حاول تاني'); return; }
+      stockMap[slug] = value;
+      rowEl.classList.toggle('out', !value);
+      rowEl.classList.toggle('in', value);
+      rowEl.querySelector('.state').textContent = value ? 'متوفر' : 'غير متوفر';
+      updateStatusBar();
+    });
+  }
+
+  function updateStatusBar(){
+    var total = MATERIALS.length;
+    var outCount = MATERIALS.filter(function(m){ return !isInStock(m.slug); }).length;
+    document.getElementById('statusBar').innerHTML = total + ' خامة إجمالاً — <b>' + (total - outCount) + ' متوفرة</b>, ' + outCount + ' غير متوفرة';
+  }
+
+  /* ---------- filters ---------- */
+  function renderFilters(){
+    var origins = ['all'].concat(MATERIALS.map(function(m){ return m.origin; }).filter(function(v,i,a){ return a.indexOf(v)===i; }));
+    var el = document.getElementById('originFilter');
+    el.innerHTML = origins.map(function(o){
+      return '<button data-origin="' + o + '" class="' + (o===currentOrigin?'active':'') + '">' + ORIGIN_LABELS[o] + '</button>';
+    }).join('');
+    el.querySelectorAll('button').forEach(function(btn){
+      btn.addEventListener('click', function(){
+        currentOrigin = btn.getAttribute('data-origin');
+        renderFilters();
+        render();
+      });
+    });
+  }
+
+  document.getElementById('searchBox').addEventListener('input', function(e){
+    currentSearch = e.target.value.trim();
+    render();
+  });
+
+  /* ---------- render ---------- */
+  function render(){
+    var filtered = MATERIALS.filter(function(m){
+      if (currentOrigin !== 'all' && m.origin !== currentOrigin) return false;
+      if (currentSearch && m.name.indexOf(currentSearch) === -1) return false;
+      return true;
+    });
+
+    var byOrigin = {};
+    filtered.forEach(function(m){
+      byOrigin[m.origin] = byOrigin[m.origin] || [];
+      byOrigin[m.origin].push(m);
+    });
+
+    var root = document.getElementById('listRoot');
+    var empty = document.getElementById('emptyNote');
+    if (!filtered.length) {
+      root.innerHTML = '<div id="emptyNote">مفيش نتائج مطابقة</div>';
+      updateStatusBar();
+      return;
+    }
+
+    root.innerHTML = Object.keys(byOrigin).map(function(origin){
+      var items = byOrigin[origin];
+      return '<div class="origin-block"><h2>' + ORIGIN_LABELS[origin] + ' (' + items.length + ')</h2>' +
+        '<div class="mat-list">' +
+        items.map(function(m){
+          var inStock = isInStock(m.slug);
+          return '<div class="mat-row ' + (inStock?'in':'out') + '" data-slug="' + m.slug + '">' +
+            '<img src="' + m.image + '" loading="lazy" alt="">' +
+            '<div class="name">' + m.name + '</div>' +
+            '<div class="state">' + (inStock?'متوفر':'غير متوفر') + '</div>' +
+            '<label class="switch"><input type="checkbox" ' + (inStock?'checked':'') + '><span class="slider"></span></label>' +
+            '</div>';
+        }).join('') +
+        '</div></div>';
+    }).join('');
+
+    root.querySelectorAll('.mat-row').forEach(function(rowEl){
+      var slug = rowEl.getAttribute('data-slug');
+      var checkbox = rowEl.querySelector('input[type="checkbox"]');
+      checkbox.addEventListener('change', function(){
+        setStock(slug, checkbox.checked, rowEl);
+      });
+    });
+
+    updateStatusBar();
+  }
+</script>
+</body>
+</html>
