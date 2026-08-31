@@ -109,6 +109,8 @@
   .mat-cta svg{width:16px; height:16px;}
 
   .stock-badge{position:absolute; top:12px; inset-inline-start:12px; z-index:3; background:var(--stone); color:#fff; font-size:.72rem; font-weight:700; padding:6px 12px; border-radius:20px; letter-spacing:.02em;}
+  .stock-badge.in-stock{background:#4C8B5A;}
+  .stock-badge.out-stock{background:#B84A4A;}
   .mat-card.out-of-stock .mat-photo img{filter:grayscale(55%); opacity:.55;}
 
   .empty-note{border:1px dashed var(--line-dark); padding:36px 28px; text-align:center; color:var(--taupe); font-size:.94rem;}
@@ -406,19 +408,23 @@
     var sb = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
     sb.from('stock_status').select('slug,in_stock').then(function(res){
       if (res.error || !res.data) return;
-      res.data.forEach(function(row){
-        if (row.in_stock === false) {
-          var card = root.querySelector('.mat-card[data-slug="' + row.slug + '"]');
-          if (!card) return;
+      var statusMap = {};
+      res.data.forEach(function(row){ statusMap[row.slug] = row.in_stock; });
+      root.querySelectorAll('.mat-card[data-slug]').forEach(function(card){
+        var slug = card.getAttribute('data-slug');
+        var inStock = statusMap.hasOwnProperty(slug) ? statusMap[slug] !== false : true;
+        var photo = card.querySelector('.mat-photo');
+        if (!photo) return;
+        var badge = document.createElement('span');
+        if (inStock) {
+          badge.className = 'stock-badge in-stock';
+          badge.textContent = 'متوفر';
+        } else {
           card.classList.add('out-of-stock');
-          var photo = card.querySelector('.mat-photo');
-          if (photo) {
-            var badge = document.createElement('span');
-            badge.className = 'stock-badge';
-            badge.textContent = 'غير متوفر حالياً';
-            photo.appendChild(badge);
-          }
+          badge.className = 'stock-badge out-stock';
+          badge.textContent = 'غير متوفر';
         }
+        photo.appendChild(badge);
       });
     }).catch(function(){});
   })();
