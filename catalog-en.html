@@ -113,6 +113,32 @@
   .stock-badge.out-stock{background:#B84A4A;}
   .mat-card.out-of-stock .mat-photo img{filter:grayscale(55%); opacity:.55;}
 
+  /* ---- admin login + inline stock control ---- */
+  .admin-link{font-size:.8rem; font-weight:700; color:var(--taupe); border:1px solid var(--line-dark); padding:8px 14px; border-radius:8px; cursor:pointer;}
+  .admin-link:hover{border-color:var(--clay);}
+  .admin-overlay{display:none; position:fixed; inset:0; background:rgba(24,20,16,.55); z-index:999; align-items:center; justify-content:center; padding:20px;}
+  .admin-overlay.open{display:flex;}
+  .admin-modal{position:relative; background:#fff; max-width:380px; width:100%; border-radius:14px; padding:32px 26px; box-shadow:0 20px 60px rgba(0,0,0,.25);}
+  .admin-modal h3{font-size:1.15rem; margin-bottom:6px;}
+  .admin-modal p{color:var(--taupe); font-size:.85rem; margin-bottom:18px;}
+  .admin-modal-close{position:absolute; top:14px; inset-inline-end:16px; background:none; border:none; font-size:1.4rem; line-height:1; cursor:pointer; color:var(--taupe);}
+  .admin-field{margin-bottom:14px;}
+  .admin-field label{display:block; font-size:.8rem; font-weight:700; margin-bottom:6px; color:var(--taupe);}
+  .admin-field input{width:100%; padding:11px 13px; border:1px solid var(--line-dark); border-radius:8px; font-family:var(--disp); font-size:.95rem;}
+  .btn-admin-login{width:100%; margin-top:6px; padding:12px; border:none; border-radius:8px; background:var(--clay); color:#fff; font-weight:800; font-family:var(--disp); cursor:pointer;}
+  .btn-admin-login:hover{background:var(--clay-deep);}
+  .admin-login-error{display:none; color:#B84A4A; font-size:.82rem; margin-top:12px;}
+
+  .stock-switch{position:absolute; top:10px; inset-inline-start:10px; z-index:4; display:inline-flex; align-items:center; gap:8px; background:rgba(255,255,255,.94); padding:6px 10px; border-radius:20px; box-shadow:0 2px 10px rgba(0,0,0,.15);}
+  .stock-switch .lbl{font-size:.72rem; font-weight:700;}
+  .switch-toggle{position:relative; display:inline-block; width:38px; height:22px; flex-shrink:0;}
+  .switch-toggle input{opacity:0; width:0; height:0;}
+  .switch-slider{position:absolute; cursor:pointer; inset:0; background:#d8cfc0; transition:.2s; border-radius:22px;}
+  .switch-slider:before{position:absolute; content:""; height:16px; width:16px; right:3px; bottom:3px; background:#fff; transition:.2s; border-radius:50%;}
+  .switch-toggle input:checked + .switch-slider{background:#4C8B5A;}
+  .switch-toggle input:checked + .switch-slider:before{transform:translateX(-16px);}
+  .mat-card.admin-saving{opacity:.6;}
+
   .empty-note{border:1px dashed var(--line-dark); padding:36px 28px; text-align:center; color:var(--taupe); font-size:.94rem;}
   .empty-note b{display:block; color:var(--stone); font-family:var(--disp); font-size:1.1rem; margin-bottom:8px; font-weight:700;}
 
@@ -153,6 +179,7 @@
   </div>
   <div class="topbar-right">
     <a class="lang-link" href="catalog.html">العربية</a>
+    <a class="admin-link" id="adminLoginLink" href="javascript:void(0)">Admin Login</a>
     <a class="nav-cta" href="https://wa.me/201123883389" target="_blank" rel="noopener">
       Get a Quote
       <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
@@ -162,6 +189,24 @@
     </button>
   </div>
 </header>
+
+<div id="adminLoginOverlay" class="admin-overlay">
+  <div class="admin-modal">
+    <button class="admin-modal-close" id="adminModalClose" aria-label="Close">&times;</button>
+    <h3>Admin Login</h3>
+    <p>Sign in with your account to control material stock status directly from here.</p>
+    <div class="admin-field">
+      <label>Email</label>
+      <input type="email" id="adminEmail" autocomplete="username">
+    </div>
+    <div class="admin-field">
+      <label>Password</label>
+      <input type="password" id="adminPassword" autocomplete="current-password">
+    </div>
+    <button class="btn-admin-login" id="adminLoginSubmit">Log in</button>
+    <div id="adminLoginError" class="admin-login-error">Incorrect email or password</div>
+  </div>
+</div>
 
 <nav class="mobile-menu" id="mobileMenu">
   <button class="mobile-menu-close" id="mobileMenuClose" aria-label="Close menu">
@@ -400,33 +445,94 @@
   var root = document.getElementById('catalogRoot');
   root.innerHTML = Object.keys(CATALOG).map(function(key){ return renderGroup(key, CATALOG[key]); }).join('');
 
-  /* mark out-of-stock materials (managed from /admin.html) */
-  (function applyStockStatus(){
+  /* stock status + inline admin control (login via header, no separate /admin.html needed) */
+  (function stockAndAdmin(){
     var SUPABASE_URL = "https://kvqmoygvhiatvzzhqqhs.supabase.co";
     var SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imt2cW1veWd2aGlhdHZ6emhxcWhzIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODQ5ODM3OTAsImV4cCI6MjEwMDU1OTc5MH0.EegJd5yKKR1sfv4ly8prjT8prn18U2jieSIBXldO-qE";
     if (!window.supabase || SUPABASE_URL.indexOf('REPLACE') === 0) return;
     var sb = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-    sb.from('stock_status').select('slug,in_stock').then(function(res){
-      if (res.error || !res.data) return;
-      var statusMap = {};
-      res.data.forEach(function(row){ statusMap[row.slug] = row.in_stock; });
+    var isAdmin = false;
+    var statusMap = {};
+
+    var loginLink = document.getElementById('adminLoginLink');
+    var overlay = document.getElementById('adminLoginOverlay');
+    var emailInput = document.getElementById('adminEmail');
+    var passInput = document.getElementById('adminPassword');
+    var loginError = document.getElementById('adminLoginError');
+
+    function openModal(){ overlay.classList.add('open'); }
+    function closeModal(){ overlay.classList.remove('open'); loginError.style.display = 'none'; }
+
+    loginLink.addEventListener('click', function(){
+      if (isAdmin) { sb.auth.signOut().then(function(){ isAdmin = false; loginLink.textContent = 'Admin Login'; renderStock(); }); return; }
+      openModal();
+    });
+    document.getElementById('adminModalClose').addEventListener('click', closeModal);
+    overlay.addEventListener('click', function(e){ if (e.target === overlay) closeModal(); });
+    document.getElementById('adminLoginSubmit').addEventListener('click', doLogin);
+    passInput.addEventListener('keydown', function(e){ if (e.key === 'Enter') doLogin(); });
+
+    function doLogin(){
+      loginError.style.display = 'none';
+      sb.auth.signInWithPassword({ email: emailInput.value.trim(), password: passInput.value }).then(function(res){
+        if (res.error) { loginError.style.display = 'block'; return; }
+        isAdmin = true;
+        loginLink.textContent = 'Log out';
+        closeModal();
+        renderStock();
+      });
+    }
+
+    function setStock(slug, value, card){
+      card.classList.add('admin-saving');
+      sb.from('stock_status').upsert({ slug: slug, in_stock: value, updated_at: new Date().toISOString() }, { onConflict: 'slug' }).then(function(res){
+        card.classList.remove('admin-saving');
+        if (res.error) { alert('Something went wrong saving, please try again'); return; }
+        statusMap[slug] = value;
+        renderStock();
+      });
+    }
+
+    function renderStock(){
       root.querySelectorAll('.mat-card[data-slug]').forEach(function(card){
         var slug = card.getAttribute('data-slug');
         var inStock = statusMap.hasOwnProperty(slug) ? statusMap[slug] !== false : true;
+        card.classList.toggle('out-of-stock', !inStock);
         var photo = card.querySelector('.mat-photo');
         if (!photo) return;
-        var badge = document.createElement('span');
-        if (inStock) {
-          badge.className = 'stock-badge in-stock';
-          badge.textContent = 'In Stock';
+        var oldBadge = photo.querySelector('.stock-badge, .stock-switch');
+        if (oldBadge) oldBadge.remove();
+
+        if (isAdmin) {
+          var wrap = document.createElement('div');
+          wrap.className = 'stock-switch';
+          wrap.innerHTML = '<span class="lbl">' + (inStock ? 'In Stock' : 'Out of Stock') + '</span>' +
+            '<label class="switch-toggle"><input type="checkbox" ' + (inStock ? 'checked' : '') + '><span class="switch-slider"></span></label>';
+          wrap.querySelector('input').addEventListener('change', function(e){ setStock(slug, e.target.checked, card); });
+          photo.appendChild(wrap);
         } else {
-          card.classList.add('out-of-stock');
-          badge.className = 'stock-badge out-stock';
-          badge.textContent = 'Out of Stock';
+          var badge = document.createElement('span');
+          badge.className = inStock ? 'stock-badge in-stock' : 'stock-badge out-stock';
+          badge.textContent = inStock ? 'In Stock' : 'Out of Stock';
+          photo.appendChild(badge);
         }
-        photo.appendChild(badge);
       });
-    }).catch(function(){});
+    }
+
+    function loadStock(){
+      sb.from('stock_status').select('slug,in_stock').then(function(res){
+        if (res.error || !res.data) return;
+        statusMap = {};
+        res.data.forEach(function(row){ statusMap[row.slug] = row.in_stock; });
+        renderStock();
+      }).catch(function(){});
+    }
+
+    sb.auth.getSession().then(function(res){
+      isAdmin = !!(res.data && res.data.session);
+      if (isAdmin) loginLink.textContent = 'Log out';
+      loadStock();
+    });
   })();
 
   root.addEventListener('click', function(e){
