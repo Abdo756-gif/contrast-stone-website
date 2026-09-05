@@ -13,13 +13,14 @@
 <link rel="apple-touch-icon" href="favicon-180.png">
 <style>
   :root{
-    --stone:#181410; --charcoal:#211c17; --charcoal-2:#2a231c; --clay:#b08d57; --clay-bright:#d4b378; --clay-deep:#8a6c3f;
-    --cream:#efe6d8; --taupe:#a99a86; --line:rgba(239,230,216,.14); --line-dark:rgba(24,20,16,.12);
+    --stone:#08070d; --charcoal:#121018; --charcoal-2:#181420; --clay:#b08d57; --clay-bright:#d4b378; --clay-deep:#8a6c3f;
+    --cream:#efe6d8; --taupe:#b3a8c2; --line:rgba(201,161,90,.22); --line-dark:rgba(201,161,90,.16);
     --disp:'Changa',sans-serif; --body:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif; --wrap:1400px;
+    --void:#050509; --ink:#f4f2ee;
   }
   *{box-sizing:border-box; margin:0; padding:0;}
   html{scroll-behavior:smooth;}
-  body{font-family:var(--body); background:var(--cream); color:var(--stone); line-height:1.7; -webkit-font-smoothing:antialiased;}
+  body{font-family:var(--body); background:var(--void); color:var(--ink); line-height:1.7; -webkit-font-smoothing:antialiased;}
   a{color:inherit; text-decoration:none;}
   img{display:block; max-width:100%;}
   .wrap{max-width:var(--wrap); margin:0 auto; padding:0 40px;}
@@ -57,6 +58,7 @@
 
   .hero{position:relative; min-height:100vh; display:flex; align-items:flex-end; background:var(--stone);}
   .hero-photo{position:absolute; inset:0;}
+  #motes{position:absolute; inset:0; width:100%; height:100%; z-index:1; pointer-events:none; opacity:.5;}
   .hero-photo img, .hero-photo video{width:100%; height:100%; object-fit:cover; object-position:center 45%;}
   .hero-photo::after{content:""; position:absolute; inset:0; background:linear-gradient(0deg, rgba(24,20,16,.55) 5%, rgba(24,20,16,.05) 40%, rgba(24,20,16,.35) 100%);}
   .hero-body{position:relative; z-index:1; padding:0 40px 60px; max-width:var(--wrap); margin:0 auto; width:100%; text-shadow:0 2px 18px rgba(0,0,0,.55);}
@@ -81,7 +83,7 @@
   @media (max-width:700px){.why-row{grid-template-columns:56px 1fr; gap:16px;}}
   .why-num{font-family:var(--disp); font-weight:800; font-size:clamp(2.2rem,4vw,3.2rem); color:var(--clay); line-height:1;}
   .why-row h3{font-size:1.25rem; margin-bottom:10px;}
-  .why-row p{color:#5a4f40; max-width:560px;}
+  .why-row p{color:var(--taupe); max-width:560px;}
 
   .filter-row{display:flex; gap:26px; flex-wrap:wrap; margin:44px 0 40px; font-size:.86rem; font-weight:600;}
   .filter-btn{background:none; border:none; padding:0 0 6px; cursor:pointer; color:var(--taupe); border-bottom:2px solid transparent;}
@@ -147,7 +149,7 @@
   .faq-item summary::-webkit-details-marker{display:none;}
   .faq-item summary::after{content:"+"; font-size:1.3rem; color:var(--clay); transition:transform .2s ease; flex-shrink:0;}
   .faq-item[open] summary::after{transform:rotate(45deg);}
-  .faq-item p{margin-top:12px; color:#5a4f40; font-size:.95rem; max-width:600px;}
+  .faq-item p{margin-top:12px; color:var(--taupe); font-size:.95rem; max-width:600px;}
 
   .contact{text-align:center;}
   .contact h2{margin-bottom:18px;}
@@ -171,7 +173,7 @@
   .contact .address .visit-line{color:var(--clay-bright); font-weight:600;}
   .contact .address a{color:var(--clay-bright); font-weight:700; border-bottom:1px solid currentColor;}
 
-  .footer{background:var(--stone); color:#7d7263; text-align:center; padding:34px 24px; font-size:.85rem;}
+  .footer{background:var(--stone); color:var(--taupe); text-align:center; padding:34px 24px; font-size:.85rem;}
   .footer-logo{height:70px; width:78px; margin:0 auto 14px; opacity:.8; filter:brightness(0) invert(1);}
   .logo-mark{background-image:url("logo-footer.png"); background-repeat:no-repeat; background-position:center; background-size:contain;}
   .footer a{color:var(--clay-bright); border-bottom:1px solid currentColor;}
@@ -227,6 +229,7 @@
       <video autoplay muted loop playsinline poster="calacata-sueste-1.jpg">
         <source src="hero-video.mp4" type="video/mp4">
       </video>
+      <canvas id="motes"></canvas>
     </div>
     <div class="hero-body">
       <span class="eyebrow">Fabrication & installation — since 2016</span>
@@ -497,5 +500,39 @@
   }
 </script>
 
+
+<script>
+  // Ambient light-motes canvas -- subtle "deep formation" atmosphere in the hero
+  (function(){
+    var canvas = document.getElementById('motes');
+    if (!canvas) return;
+    var ctx = canvas.getContext('2d');
+    var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    var parent = canvas.parentElement;
+    var motes = [];
+    function size(){ canvas.width = parent.clientWidth; canvas.height = parent.clientHeight; }
+    function make(){
+      var count = Math.max(16, Math.floor(canvas.width/50));
+      motes = [];
+      for (var i=0;i<count;i++){
+        motes.push({ x: Math.random()*canvas.width, y: Math.random()*canvas.height, r: Math.random()*1.5+.4, s: Math.random()*.3+.06, o: Math.random()*.45+.15 });
+      }
+    }
+    function draw(){
+      ctx.clearRect(0,0,canvas.width,canvas.height);
+      for (var i=0;i<motes.length;i++){
+        var m = motes[i];
+        ctx.beginPath();
+        ctx.arc(m.x, m.y, m.r, 0, Math.PI*2);
+        ctx.fillStyle = 'rgba(240,207,142,'+m.o+')';
+        ctx.fill();
+        if (!reduce){ m.y -= m.s; if (m.y < -4){ m.y = canvas.height+4; m.x = Math.random()*canvas.width; } }
+      }
+      if (!reduce) requestAnimationFrame(draw);
+    }
+    size(); make(); draw();
+    window.addEventListener('resize', function(){ size(); make(); });
+  })();
+</script>
 </body>
 </html>
